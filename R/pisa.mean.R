@@ -1,5 +1,5 @@
 pisa.mean <-
-function(variable, by, data) {
+function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   mean.input <- function(variable, data) {
     # Replicate weight means (sampling error)
     meanrp <-     achmrp <- sapply(1:80, function(i) weighted.mean(as.numeric(data[[variable]]), 
@@ -10,15 +10,21 @@ function(variable, by, data) {
     # Standard error (sampling eror) 
     meanse <- (0.05*sum((meanrp-meantot)^2))^(1/2)
     result <- data.frame("Mean"= meantot, "Std.err."= meanse)
-    return(round(result, 3))
+    return(round(result, 2))
   }
   # If by no supplied, calculate for the complete sample    
   if (missing(by)) { 
-    return(mean.input(variable=variable, data=data))
+    output <- mean.input(variable=variable, data=data)
   } else {
     for (i in by) {
       data[[c(i)]] <- as.character(data[[c(i)]])
     }
-    return(ddply(data, by, function(x) mean.input(data=x, variable=variable)))
+    output <- ddply(data, by, function(x) mean.input(data=x, variable=variable))
   }
+  
+  if (export)  {
+    write.csv(output, file=file.path(folder, paste(name, ".csv", sep="")))
+  }
+  
+  return(output)
 }

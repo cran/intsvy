@@ -2,16 +2,19 @@
 \alias{intsvy-package}
 \alias{intsvy}
 \docType{package}
-\title{Analysis of international large-scale assessment datasets (PIRLS, TIMSS, PISA)}
-\description{The package provide useRs with tools for reading and analyzing datasets from three international assessments (i.e., PIRLS 2006, TIMSS 2007, and PISA 2009). To read the data, it includes functions that view labels, allow the useR to select variables and countries, merge student and school files, and finally import the data for analysis into R. For the analysis, it includes functions for producing frequency tables and calculating correlations, means, and regressions that handling plausible values and the complex sample design (i.e., replicate weights)}
+\title{International Assessment Data Manager}
+\description{Provides tools for importing, merging, and analysing data from international assessment studies (TIMSS, PIRLS, and PISA)}
 \details{
 \tabular{ll}{
 Package: \tab intsvy\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
-Date: \tab 2012-11-23\cr
-License: \tab GPL-2\cr
+Date: \tab 2013-04-16\cr
+License: \tab What license is it under?\cr
 }
+intsvy allows useRs to work with data from TIMSS, PIRLS, and PISA. The data is publicly available @ rms.iea-dpc.org and www.oecd.org/pisa in SPSS format. Data and merge functions print variable labels and the name of participating countries in international assessments as well as import data directly into R for the variables in student, parent, school, and teacher instruments and countries selected by the useR. Analysis functions, including mean statistics, standard deviations, regression estimates, correlation coefficients, and frequency tables, calculate point estimates and standard errors that take into account the complex sample design (i.e., replicate weights) and plausible values of achievement scores. 
 }
+
 \author{Daniel Caro <daniel.caro@education.ox.ac.uk>}
-\references{Technical reports of the corresponding surveys}
+\references{PISA, PIRLS, and TIMSS Technical Reports}
+

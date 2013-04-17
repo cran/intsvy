@@ -1,31 +1,42 @@
 \name{timss.reg}
 \alias{timss.reg}
-\title{
-Regression analysis
-}
+\title{Regression analysis}
 \description{
-pisa.mean performs standard linear regression analysis (OLS) for an observed depedent variable (NOT for plausible values).
+timss.reg performs standard linear regression analysis (OLS) for an observed depedent variable (NOT for plausible values)
 }
 \usage{
-timss.reg(regform, by, data)
-}
-\arguments{
-  \item{regform}{
-A regression formula (e.g., "ASBGBOOK ~ ITSEX").
-}
-  \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 
-}
-  \item{data}{
-An R object, normally a data frame, containing the data from TIMSS.
-}
-}
-\value{
-timss.reg returns a data frame with coefficients, standard errors and t-values. If "by" is specified, results are reported in a list.
+timss.reg(y, x, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
 }
 
-\author{
-Daniel Caro
+\arguments{
+  \item{y}{
+Label for dependent variable.
+}
+  \item{x}{
+Data labels of independent variables.
+}
+  \item{by}{
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
+}
+  \item{weight}{
+The total weight, "TOTWGT" in the TIMSS dataset.
+}
+  \item{data}{
+An R object, normally a data frame, containing the data from PIRLS.
+}
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
+}
+  \item{name}{
+The name of the exported file.
+}
+  \item{folder}{
+The folder where the exported file is located.
+}
+}
+
+\value{
+timss.reg returns a data frame with coefficients, standard errors and t-values. If "by" is specified, results are reported in a list.
 }
 
 
@@ -34,41 +45,5 @@ pirls.reg
 }
 \examples{
 \dontrun{
-# Exhibit 2.11
-timss.data$SEX[timss.data$ITSEX==2]=1
-timss.data$SEX[timss.data$ITSEX==1]=0
-
-timss.reg(regform="BSDAGE ~ SEX", by=c("IDCNTRYL"), data=timss.data)
-timss.mean(variable="BSDAGE", by=c("IDCNTRYL", "ITSEX"), data=timss.data)
-}
-
-
-
-
-## The function is currently defined as
-function (regform, by, data) 
-{
-    reg.input <- function(regform, data) {
-        Coefrp <- sapply(1:75, function(i) coefficients(lm(formula = as.formula(regform), 
-            data = data, weights = ifelse(data[["JKZONE"]] == 
-                i, 2 * data[["TOTWGT"]] * data[["JKREP"]], data[["TOTWGT"]]))))
-        Reg <- summary(lm(formula = as.formula(regform), data = data, 
-            weights = data[["TOTWGT"]]))
-        Coeftot <- Reg$coefficients[, 1]
-        R2 <- Reg$r.squared
-        CoefSE <- apply((Coefrp - Coeftot)^2, 1, sum)^(1/2)
-        CoefT <- Coeftot/CoefSE
-        RegTab <- round(data.frame(Estimate = Coeftot, `Std. Error` = CoefSE, 
-            `t value` = CoefT, check.names = F), 2)
-        return(RegTab)
-    }
-    if (missing(by)) {
-        return(reg.input(regform = regform, data = data))
-    }
-    else {
-        return(lapply(split(data, data[by]), function(x) reg.input(regform = regform, 
-            data = x)))
-    }
-  }
-}
-
+timss.reg(y="BSDAGE", x="SEX", by=c("IDCNTRYL"), data=timss8g)
+}}

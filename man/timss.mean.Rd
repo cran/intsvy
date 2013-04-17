@@ -1,62 +1,53 @@
 \name{timss.mean}
 \alias{timss.mean}
 \title{
-Calculates the mean
+Calculates mean of variable
 }
 \description{
-Calculates the mean for an observed variable (NOT one with plausible values).
+Calculates the mean of an observed variable (NOT one with plausible values) and its standard error.
 }
 \usage{
-timss.mean(variable, by, data)
+timss.mean(variable, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{variable}{
-A variable label. The mean is calculated for this variable.
+The label corresponding to the observed variable, for example, "ASDAGE", for the age of the student.
 }
   \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
+}
+  \item{weight}{
+The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
-An R object, normally a data frame, containing the data from TIMSS.
+An R object, normally a data frame, containing the data from PIRLS.
+}
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
+}
+  \item{name}{
+The name of the exported file.
+}
+  \item{folder}{
+The folder where the exported file is located.
 }
 }
+
 \value{
-timss.mean returns a data frame including the means and standard errors.
-}
-\author{
-Daniel Caro
+timss.mean returns a data frame with means and standard errors.
 }
 
 \seealso{
-pirls.mean
+pirls.mean, pisa.mean
 }
 \examples{
 \dontrun{
-## Exhibit 2.5, p.19 User Guide 2007
-timss.mean(variable="BSDAGE", by="IDCNTRYL", data=timss.data)}
+# TIMSS G4: Exhibit 8.1 International Report TIMSS 2011, p. 330
+timss.mean(variable='ASBGSLM', by='IDCNTRYL', data=timss4g)
 
+# TIMSS G8: Exhibit 2.17 User Guide TIMSS 2011, p. 27
+timss.mean(variable='BSBGSLM', by='IDCNTRYL', data=timss8g)
 
-
-## The function is currently defined as
-function (variable, by, data) 
-{
-    mean.input <- function(variable, data) {
-        meanrp <- sapply(1:75, function(x) weighted.mean(as.numeric(data[[variable]]), 
-            ifelse(data[["JKZONE"]] == x, 2 * data[["TOTWGT"]] * 
-                data[["JKREP"]], data[["TOTWGT"]]), na.rm = TRUE))
-        meantot <- weighted.mean(as.numeric(data[[variable]]), 
-            data[["TOTWGT"]], na.rm = TRUE)
-        meanse <- (sum((meanrp - meantot)^2))^(1/2)
-        result <- data.frame(Mean = meantot, Std.err. = meanse)
-        return(round(result, 2))
-    }
-    if (missing(by)) {
-        return(mean.input(variable = variable, data = data))
-    }
-    else {
-        return(ddply(data, by, function(x) mean.input(data = x, 
-            variable = variable)))
-    }
-  }
+}
 }
 

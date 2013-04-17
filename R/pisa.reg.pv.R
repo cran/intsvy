@@ -1,5 +1,5 @@
 pisa.reg.pv <-
-function(x, pvlabel="READ", by, data) {
+function(x, pvlabel="READ", by, data, export=FALSE, name= "output", folder=getwd()) {
   
   reg.pv.input <- function(x, pvlabel=pvlabel, data) {
     # PV labels
@@ -29,8 +29,14 @@ function(x, pvlabel="READ", by, data) {
   
   # If by not supplied, calculate for the complete sample    
   if (missing(by)) { 
-    return(reg.pv.input(x=x, pvlabel=pvlabel, data=data)) 
+    output <- reg.pv.input(x=x, pvlabel=pvlabel, data=data) 
   } else {
-    return(lapply(split(data, data[by]), function(i) reg.pv.input(x=x, pvlabel=pvlabel, data=i)))
+    output <- lapply(split(data, data[by]), function(i) reg.pv.input(x=x, pvlabel=pvlabel, data=i))
   }
+  
+  if (export)  {
+    write.csv(output, file=file.path(folder, paste(name, ".csv", sep="")))
+  }
+  
+  return(output)
 }

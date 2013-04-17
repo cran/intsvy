@@ -1,77 +1,55 @@
 \name{timss.ben.pv}
 \alias{timss.ben.pv}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculates percentage of students at or above a benchmark
+TIMSS international benchmarks
 }
 \description{
-timss.ben.pv calculates the percentage of students performing at or above the levels of achievement given by the useR. It produces the results for the international PIRLS/TIMSS benchmarks by default
+timss.ben.pv calculates the percentage of students performing at or above the cut-off points (scores) given by the useR. The default are the benchmarks established by PIRLS/TIMSS
 }
 \usage{
-timss.ben.pv(pvlabel, cutoff = c(400, 475, 550, 625), by, data)
+timss.ben.pv(pvlabel, cutoff = c(400, 475, 550, 625), by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{pvlabel}{
-The label corresponding to the achievement variable, e.g., "BSMMAT" for overall reading performance.
+The label corresponding to the achievement variable, for example, "BSMMAT", for overall math performance.
 }
   \item{cutoff}{
-The cut-off points or benchmarks for calculating the percentage of students. The default are the PIRLS/TIMSS international benchmarks: cutoff = c(400, 475, 550, 625)
+The cut-off points or benchmarks for calculating the percentage of students. The default are the PIRLS/TIMSS international benchmarks: cutoff = c(400, 475, 550, 625).
 }
   \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 	
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
+}
+  \item{weight}{
+The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
 An R object, normally a data frame, containing the data from TIMSS.
 }
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
 }
+  \item{name}{
+The name of the exported file.
+}
+  \item{folder}{
+The folder where the exported file is located.
+}
+}
+
 \value{
 timss.ben.pv returns a data frame with the percentage of students at or above the benchmark and the corresponding standard error.
 }
-\author{
-Daniel Caro
-}
 
 \seealso{
-pirls.ben.pv
+pirls.ben.pv, pisa.ben.pv
 }
 \examples{
 \dontrun{
-# Exhibit 2.16, p31 User Guide
-timss.ben.pv(pvlabel="BSMMAT", by="IDCNTRYL", data=timss.data)}
-
-
-
-## The function is currently defined as
-function (pvlabel, cutoff = c(400, 475, 550, 625), by, data) 
-{
-    pv.ben.input <- function(pvlabel, cutoff, data) {
-        pvname <- paste(pvlabel, "0", 1:5, sep = "")
-        tabpv1 <- sapply(1:length(cutoff), function(z) sapply(1:75, 
-            function(x) percent(data[[pvname[1]]] >= cutoff[z], 
-                weights = ifelse(data[["JKZONE"]] == x, 2 * data[["TOTWGT"]] * 
-                  data[["JKREP"]], data[["TOTWGT"]]), na.rm = TRUE, 
-                total = F)))
-        tabpv <- sapply(1:length(cutoff), function(z) sapply(pvname, 
-            function(x) percent(data[[x]] >= cutoff[z], weights = data[["TOTWGT"]], 
-                na.rm = TRUE, total = F)))
-        tabpvw <- sapply(1:length(cutoff), function(y) sum(sapply(1:75, 
-            function(x) (tabpv1[x, y] - tabpv[1, y])^2)))
-        tabpvb <- (1 + 1/5) * apply(tabpv, 2, var)
-        tabse <- round((tabpvw + tabpvb)^(1/2), 2)
-        tabtot <- round(apply(tabpv, 2, mean), 2)
-        result <- data.frame(Benchmark = paste(rep("At or above", 
-            length(cutoff)), cutoff), Percentage = tabtot, `Std. err.` = tabse, 
-            check.names = F)
-        return(result)
-    }
-    if (missing(by)) {
-        return(pv.ben.input(pvlabel = pvlabel, cutoff = cutoff, 
-            data = data))
-    }
-    else {
-        return(ddply(data, by, function(x) pv.ben.input(pvlabel = pvlabel, 
-            cutoff = cutoff, data = x)))
-    }
-  }
+# TIMSS G8: Exhibit 2.14 User Guide TIMSS 2011, p. 24
+timss.ben.pv(pvlabel="BSMMAT", by="IDCNTRYL", cutoff = c(400, 475, 550, 625), data=timss8g)
+# TIMSS G4: Exhibit 2.2 International Report TIMSS 2011, p. 90
+timss.ben.pv(pvlabel="ASMMAT", by="IDCNTRYL", data=timss4g)
 }
+}
+
 

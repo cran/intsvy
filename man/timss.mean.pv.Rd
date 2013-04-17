@@ -1,63 +1,52 @@
 \name{timss.mean.pv}
 \alias{timss.mean.pv}
-\title{Calculates mean performance}
-\description{
-timss.mean.pv uses five plausible values to calculate mean performance and its standard error}
-\usage{
-timss.mean.pv(pvlabel, by, data)
+\title{
+Calculates mean achievement score
 }
+\description{
+timss.mean.pv uses five plausible values to calculate the mean achievement score and its standard error
+}
+\usage{
+timss.mean.pv(pvlabel = "ASRREA", by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+}
+
 \arguments{
   \item{pvlabel}{
-The label corresponding to the achievement variable, e.g., "BSMMAT" for overall reading performance.
+The label corresponding to the achievement variable, for example, "BSMMAT", for overall reading performance.
 }
   \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
+}
+  \item{weight}{
+The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
 An R object, normally a data frame, containing the data from PIRLS.
 }
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
 }
+  \item{name}{
+The name of the exported file.
+}
+  \item{folder}{
+The folder where the exported file is located.
+}
+}
+
 \value{
-timss.mean.pv returns a data frame with the mean and standard errors.
-}
-  \author{
-Daniel Caro
+timss.mean.pv returns a data frame with the mean values and standard errors.
 }
 
 \seealso{
-pirls.mean.pv
+pirls.mean.pv, pisa.mean.pv
 }
-\examples{
-\dontrun{
-## Exhibit 2.8, p.22 User Guide 2007
-timss.mean.pv(pvlabel="BSMMAT", by=c("IDCNTRYL", "ITSEX"), data=timss.data)}
+\examples{\dontrun{
+# TIMSS G4: Exhibit 1.1 International report TIMSS, p. 40
+timss.mean.pv(pvlabel="ASMMAT", by= "IDCNTRYL", data=timss4g)
 
-
-
-
-## The function is currently defined as
-function (pvlabel, by, data) 
-{
-    pv.input <- function(pvlabel = "ASRREA", data) {
-        pvnames <- paste(pvlabel, "0", 1:5, sep = "")
-        read1m <- sapply(1:75, function(x) weighted.mean(data[[pvnames[[1]]]], 
-            ifelse(data[["JKZONE"]] == x, 2 * data[["TOTWGT"]] * 
-                data[["JKREP"]], data[["TOTWGT"]]), na.rm = TRUE))
-        readm <- sapply(pvnames, function(x) weighted.mean(data[[x]], 
-            data[["TOTWGT"]], na.rm = TRUE))
-        varw <- sum((read1m - readm[1])^2)
-        varb <- (1 + 1/5) * var(readm)
-        readse <- (varw + varb)^(1/2)
-        result <- data.frame(Mean = mean(readm), Std.err. = readse)
-        return(round(result, 2))
-    }
-    if (missing(by)) {
-        return(pv.input(pvlabel = pvlabel, data = data))
-    }
-    else {
-        return(ddply(data, by, function(x) pv.input(data = x, 
-            pvlabel = pvlabel)))
-    }
-  }
+# TIMSS G8: Exhibit 2.8 User Guide TIMSS 2011, p. 18
+timss.mean.pv(pvlabel="BSMMAT", by= c("IDCNTRYL", "ITSEX"), data=timss8g)
+}
 }
 

@@ -1,18 +1,25 @@
-pirls.select.merge <- function(folder=getwd(), countries, student, home, school) {
+pirls.select.merge <-
+function(folder=getwd(), countries, student=c(), home, school, teacher) {
   
-  # All file names of datasets in lists (student, home, school)
-  files.all <- lapply(c("asg", "ash", "acg"), function(x) list.files(folder, 
-               full.names= T, pattern=paste("^", x, ".*.sav$", sep=""), recursive=T))
+  if (missing(student) & missing(home) & missing(school) & missing(teacher)) {
+    stop("no variables are selected")
+  }
+  
+  # Look for datasets (student, home, school) including student-teacher linkage (ast)
+  files.all <- lapply(c("asg", "ash", "acg", "ast", "atg"), function(x) list.files(folder, 
+              full.names= TRUE, pattern=paste("^", x, ".*.sav$", sep=""), recursive=T))
+  
+  # Name list for identification later, rather than using numbers
+  names(files.all) <- unique(unlist(lapply(files.all, function(x) substr(x, nchar(x)-11, nchar(x)-9))))
+    
   
   # Country abbrevation labels from existing file names (datasets)
   cntlab <- toupper(unique(unlist(lapply(files.all, function(x) substr(x, nchar(x)-8, nchar(x)-6))))) 
   
-  # External data (locate in data folder) from userguide: Georgia ISO FEO was incorrect and changed to GEO
-
-  # setdiff(cntlab, country$ISO) needs be zero! all elements in data labels are in userguide
+  # setdiff(cntlab, iea.country$ISO) needs be zero! all elements in data labels are in userguide
   
   # Countries in the datasets and userguide
-  country.list <- country.ug[country.ug$ISO %in% intersect(country.ug$ISO, cntlab), ]
+  country.list <- iea.country[iea.country$ISO %in% intersect(iea.country$ISO, cntlab), ]
   
   
   # If no countries are selected: seleect all
@@ -29,56 +36,188 @@ pirls.select.merge <- function(folder=getwd(), countries, student, home, school)
   files.select <- lapply(files.all, function(y) sapply(countries, function(x) y[substr(y, 
                   nchar(y)-8, nchar(y)-6)==tolower(x)])) 
   
-
-  # Student achievement and background data
-  student.data <- do.call("rbind",                                          # Merge [[1]] student
-  lapply(lapply(files.select[[1]], function(y) spss.system.file(y)),        # Each dataset
-  function(x) as.data.frame(x[ , c(                                         # Variable selection
-  "IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD", "JKREP",                      # IDs/Weights/PVs
+  # Remove cases for no home instruments
+  files.select[['ash']] <- files.select[['ash']][lapply(files.select[['ash']], length)!=0]
+  
+  # Student achievement and background data, needed also if home or school is non-missing
+  
+  if (!missing(student) | !missing(home) | !missing(school)) {
+  
+  if (!missing(student) & is.null(files.select[['asg']])) {
+    stop('cannot locate student data files')
+  }
+  
+  suppressWarnings(suppressMessages(student.data <- do.call("rbind",                  # Merge [[1]] student
+  lapply(files.select[['asg']], function(y) read.spss(y, to.data.frame=TRUE)[, c(     # Each dataset 
+  "IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD", "JKREP",                                # Variable def sel
   "JKZONE", "HOUWGT", "SENWGT", "TOTWGT",      
   "ASRREA01", "ASRREA02", "ASRREA03", "ASRREA04", "ASRREA05",                               
   "ASRINF01", "ASRINF02", "ASRINF03", "ASRINF04", "ASRINF05",
-  "ASRLIT01", "ASRLIT02", "ASRLIT03", "ASRLIT04", "ASRLIT05",
-   student)])))                                                              # Selected
+  "ASRLIT01", "ASRLIT02", "ASRLIT03", "ASRLIT04", "ASRLIT05", student)]))))        # Selected                                            
+  
+  }
+  
+  # Home background data
+  if (!missing(home)) {
+    
+    if (is.null(files.select[['ash']])) {
+      stop('cannot locate home background data files')
+    }
+    
+  suppressWarnings(suppressMessages(home.data <- do.call("rbind",                                                   # Merge [[2]] home
+      lapply(files.select[['ash']], function(y) read.spss(y, to.data.frame=TRUE)[, c(                         # Each dataset
+      "IDCNTRY", "IDSTUD", home)]))))                                                   # Selected
+  }
+  
+  # School data
+  
+  if (!missing(school)) {
+    
+    if (is.null(files.select[['acg']])) {
+      stop('cannot locate school data files')
+    }
+    
+  suppressWarnings(suppressMessages(school.data <- do.call("rbind",                                                 # Merge [[3]] school
+         lapply(files.select[['acg']], function(y) read.spss(y, to.data.frame=TRUE)[,c(              # Each dataset
+         "IDCNTRY", "IDSCHOOL", "SCHWGT", school)]))))                                                                     # Selected
+  }
+  
+  
+  
+  # Teacher data
+  if (!missing(teacher)) {
+  
+    if (is.null(files.select[['atg']]) | is.null(files.select[['ast']])) {
+      stop('cannot locate teacher data files')
+    }
+    
+  suppressWarnings(suppressMessages(teach.l <- do.call("rbind",                              
+           lapply(files.select[['ast']], function(y) read.spss(y, to.data.frame=TRUE)))))
+
+  suppressWarnings(suppressMessages(teach.i <-  do.call("rbind",                              
+             lapply(files.select[['atg']], function(y) read.spss(y, to.data.frame=TRUE)[, c(
+               "IDCNTRY", "IDTEALIN", teacher)]))))
+  
+  teacher.data <- merge(teach.l, teach.i, by=c("IDCNTRY", "IDTEALIN"))
+  }
+  
+  
+  
+  # Merging data depending on existing datasets/arguments
+  
+  # Student data available
+  
+  if (!missing(student) & missing(home) & missing(school) & missing(teacher)) {
+    pirls.all <- student.data
+  }
+  
+  if (!missing(student) & !missing(home) & missing(school) & missing(teacher)) {
+    pirls.all <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+  }
+  
+  if (!missing(student) & missing(home) & !missing(school) & missing(teacher)) {
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc"))
+  }
+  
+  
+  if (!missing(student) & missing(home) & missing(school) & !missing(teacher)) {
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- student.data
+  }  
+  
+  
+  
+  if (!missing(student) & !missing(home) & !missing(school) & missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc"))
+  }
+  
+  
+  if (!missing(student) & missing(home) & !missing(school) & !missing(teacher)) {
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc") )
+  }
+  
+  if (!missing(student) & !missing(home) & missing(school) & !missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- student.data
+  }
+  
+  
+  if (!missing(student) & !missing(home) & !missing(school) & !missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc") )
+  }
+  
+  
+  
+  # Home data available
+  
+  if (missing(student) & !missing(home) & missing(school) & missing(teacher)) {
+    pirls.all <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+  }
+    
+  
+  if (missing(student) & !missing(home) & !missing(school) & missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc"))
+  }
+  
+  
+  if (missing(student) & !missing(home) & missing(school) & !missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- student.data
+  }
+  
+  if (missing(student) & !missing(home) & !missing(school) & !missing(teacher)) {
+    student.data <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
+    student.data <- merge(teacher.data, student.data, by=c("IDCNTRY", "IDSTUD"))
+    student.data <- student.data[, -c(grep("*.y", names(student.data)))]
+    names(student.data) <- gsub("*.x", "", names(student.data))
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc"))
+  }
+  
+  
+  
+  # School data available
+  
+  if (missing(student) & missing(home) & !missing(school) & missing(teacher)) {
+    pirls.all <- merge(student.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc") )
+  }
+  
+  
+  if (missing(student) & missing(home) & !missing(school) & !missing(teacher)) {
+    pirls.all <- merge(teacher.data, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc") )
+  }
+  
+# Teacher data available
+
+  if (missing(student) & missing(home) & missing(school) & !missing(teacher)) {
+    pirls.all <- teacher.data
+  }
+    
   
   
   # Create country label variable (not possible to add labels to numeric factor, see to do list)
-  student.data$IDCNTRYL <- factor(student.data$IDCNTRY,  
-  levels=country.list[country.list$Code %in% unique(student.data$IDCNTRY), "Code"] ,        
-  labels= country.list[country.list$Code %in% unique(student.data$IDCNTRY), "Country"])
+  pirls.all$IDCNTRYL <- factor(pirls.all$IDCNTRY,  
+                        levels=country.list[country.list$Code %in% unique(pirls.all$IDCNTRY), "Code"] ,        
+                        labels= country.list[country.list$Code %in% unique(pirls.all$IDCNTRY), "Country"])
   
   # table(student.data$IDCNTRYL, student.data$IDCNTRY) test of equality!
   
-  # Home background data
-  home.data <- do.call("rbind",                                                   # Merge [[2]] home
-  lapply(lapply(files.select[[2]], function(y) spss.system.file(y)),              # Each dataset
-  function(x) as.data.frame(x[ , c(                                               # Variable selection
-  "IDCNTRY", "IDSTUD",                                                            # IDs
-  home)])))                                                                       # Selected
-  
-  # School data
-  school.data <- do.call("rbind",                                                 # Merge [[3]] school
-  lapply(lapply(files.select[[3]], function(y) spss.system.file(y)),              # Each dataset
-  function(x) as.data.frame(x[, c(                                                # Variable selection
-  "IDCNTRY", "IDSCHOOL", "SCHWGT",                                                # IDs/Weight
-  school)])))                                                                     # Selected
-  
-  # We convert data.set to data.frame for "rbind", with that, we lose data.set functionalities like 
-  # codebook, show, etc, but we gain merging functions both rbind and merge, which do not work for
-  # data.sets.
-  
-  # Merge 
-  pirls.student <- merge(student.data, home.data, by=c("IDCNTRY", "IDSTUD"), suffixes=c(".st", ".hm"))
-  pirls.all <- merge(pirls.student, school.data, by=c("IDCNTRY", "IDSCHOOL"), suffixes=c(".st", ".sc") )
-  
-  # Merge test
-  
-  # data.sorted <- pirls.all[order(IDCNTRY, IDSTUD), ]
-  # junk1 <- by(data.sorted, paste(data.sorted$IDCNTRY, data.sorted$IDSCHOOL),  function(x) 
-  # c(sd(as.numeric(x$ACDGASR), na.rm=T), sd(as.numeric(x$ACDGCMP), na.rm=T), 
-  # sd(as.numeric(x$ACDGPPSS), na.rm=T)))
-  # sum(sapply(junk1, function(x) sum(x)), na.rm=T)==0
-  # SUCCESSFUL!, school variables are constant within schools
   
   return(pirls.all)
 }

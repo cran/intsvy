@@ -1,5 +1,5 @@
 pisa.mean.pv <-
-function(pvlabel, by, data) {
+function(pvlabel, by, data, export=FALSE, name= "output", folder=getwd()) {
   pv.input <- function(pvlabel="READ", data) {
     # PV variable names
     pvnames <- paste("PV", 1:5, pvlabel, sep="")
@@ -15,15 +15,21 @@ function(pvlabel, by, data) {
     varb <- (1/(5-1))*sum(sapply(1:5, function(i) (achmtot[i]-achtot)^2))
     achse <-(varw+(1+1/5)*varb)^(1/2)
     result <- data.frame("Mean"= achtot, "Std.err."= achse)
-    return(round(result, 3))
+    return(round(result, 2))
   }
   # If by no supplied, calculate for the complete sample    
   if (missing(by)) { 
-    return(pv.input(pvlabel=pvlabel, data=data))
+    output <- pv.input(pvlabel=pvlabel, data=data)
   } else {
     for (i in by) {
       data[[c(i)]] <- as.character(data[[c(i)]])
     }
-    return(ddply(data, by, function(x) pv.input(data=x, pvlabel=pvlabel)))
+    output <- ddply(data, by, function(x) pv.input(data=x, pvlabel=pvlabel))
   }
+  
+  if (export)  {
+    write.csv(output, file=file.path(folder, paste(name, ".csv", sep="")))
+  }
+  
+  return(output)
 }

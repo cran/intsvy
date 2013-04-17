@@ -1,65 +1,48 @@
 \name{pirls.rho}
 \alias{pirls.rho}
-\title{Correlation matrix}
+\title{
+Correlation matrix
+}
 \description{
 pirls.rho produces a correlations matrix for observed variables (NOT for plausible values)
 }
 \usage{
-pirls.rho(variables, by, data)
+pirls.rho(variables, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
 }
+
 \arguments{
   \item{variables}{
 Data labels for the variables in the correlation matrix (e.g., variables=c("ASRREA01", "ASDAGE") )
 }
   \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
 }
-  \item{data}{
+  \item{weight}{
+The total weight, "TOTWGT" in the PIRLS dataset.
+}
+ \item{data}{
 An R object, normally a data frame, containing the data from PIRLS.
 }
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
 }
+  \item{name}{
+The name of the exported file.
+}
+  \item{folder}{
+The folder where the exported file is located.
+}
+}
+
 \value{
-pirls.rho returns a matrix including correlation and standard error values}
-\author{
-Daniel Caro
+pirls.rho returns a matrix including correlation and standard error values.
 }
 
 \seealso{
-timss.rho
+timss.rho, pirls.rho.pv, timss.rho.pv
 }
 \examples{
 \dontrun{
-pirls.rho(variables=c("ASRREA01", "ASDAGE"), by="IDCNTRYL", data=pirls.data)
+pirls.rho(variables=c("ASRREA01", "ASDAGE"), by="IDCNTRYL", data=pirls)
 }
-
-
-## The function is currently defined as
-function (variables, by, data) 
-{
-    rho.input <- function(variables, data) {
-        data <- na.omit(data[c(variables, "TOTWGT", "JKREP", 
-            "JKZONE")])
-        rhorp <- lapply(1:75, function(i) cov.wt(data[variables], 
-            wt = ifelse(data[["JKZONE"]] == i, 2 * data[["TOTWGT"]] * 
-                data[["JKREP"]], data[["TOTWGT"]]), cor = T)[[5]])
-        rhotot <- cov.wt(data[variables], wt = data[["TOTWGT"]], 
-            cor = T)[[5]]
-        rhose <- Reduce("+", lapply(rhorp, function(x) (x - rhotot)^2))^(1/2)
-        rhomat <- round(do.call(cbind, lapply(1:ncol(rhotot), 
-            function(x) t(rbind(rhotot[, x], rhose[, x])))), 
-            3)
-        colnames(rhomat) <- unlist(lapply(1:length(variables), 
-            function(x) c(paste(variables, "Rho", sep = " ")[x], 
-                paste(variables, "SE", sep = " ")[x])))
-        return(round(rhomat, 6))
-    }
-    if (missing(by)) {
-        return(rho.input(variables = variables, data = data))
-    }
-    else {
-        return(lapply(split(data, data[by]), function(x) rho.input(variables = variables, 
-            data = x)))
-    }
-  }
 }
-

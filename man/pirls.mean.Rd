@@ -1,69 +1,49 @@
 \name{pirls.mean}
 \alias{pirls.mean}
-\title{Calculates the mean}
-\description{Calculates the mean for an observed variable (NOT one with plausible values)
+\title{
+Calculates mean of variable
+}
+\description{
+Calculates the mean of an observed variable (NOT one with plausible values) and its standard error.
 }
 \usage{
-pirls.mean(variable, by, data)
+pirls.mean(variable, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
 }
+
 \arguments{
   \item{variable}{
-A variable label. The mean is calculated for this variable (e.g., variable="ASDAGE") 
+The label corresponding to the observed variable, for example, "ASDAGE", for the age of the student.
 }
   \item{by}{
-The variable label defining the grouping, usually the countries (by="IDCNTRY"), but could be any other categorical variable. 
+The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
+}
+  \item{weight}{
+The total weight, "TOTWGT" in the PIRLS dataset.
 }
   \item{data}{
 An R object, normally a data frame, containing the data from PIRLS.
 }
+  \item{export}{
+A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
 }
-\value{
-pirls.mean returns a data frame including the means and standard errors.
+  \item{name}{
+The name of the exported file.
 }
-\author{
-Daniel Caro
+  \item{folder}{
+The folder where the exported file is located.
+}
 }
 
+\value{
+pirls.mean returns a data frame with means and standard errors.
+}
 
 \seealso{
 timss.mean, pisa.mean
 }
 \examples{
 \dontrun{
-## Replicating Exhibit 5.10 in p.162 of User Guide 2006
-
-# Number of hours spent reading stories or articles in books or magazines outside of school
-pirls.data$TIME[as.numeric(pirls.data$ASBGTSP4) ==1] <-5.5
-pirls.data$TIME[as.numeric(pirls.data$ASBGTSP4) ==2] <-4
-pirls.data$TIME[as.numeric(pirls.data$ASBGTSP4) ==3] <-2
-pirls.data$TIME[as.numeric(pirls.data$ASBGTSP4) ==4] <-0.5
-pirls.data$TIME[as.numeric(pirls.data$ASBGTSP4) ==5] <-0
-
-table(pirls.data$ASBGTSP4, pirls.data$TIME)
-
-pirls.mean(variable="TIME", by="IDCNTRYL", data=pirls.data)}
-
-
-## The function is currently defined as
-function (variable, by, data) 
-{
-    mean.input <- function(variable, data) {
-        meanrp <- sapply(1:75, function(x) weighted.mean(as.numeric(data[[variable]]), 
-            ifelse(data[["JKZONE"]] == x, 2 * data[["TOTWGT"]] * 
-                data[["JKREP"]], data[["TOTWGT"]]), na.rm = TRUE))
-        meantot <- weighted.mean(as.numeric(data[[variable]]), 
-            data[["TOTWGT"]], na.rm = TRUE)
-        meanse <- (sum((meanrp - meantot)^2))^(1/2)
-        result <- data.frame(Mean = meantot, Std.err. = meanse)
-        return(round(result, 2))
-    }
-    if (missing(by)) {
-        return(mean.input(variable = variable, data = data))
-    }
-    else {
-        return(ddply(data, by, function(x) mean.input(data = x, 
-            variable = variable)))
-    }
-  }
+# PIRLS: Exhibit 2.17 User Guide PIRLS 2011, p. 28
+pirls.mean(variable='ASBHELA', by= 'IDCNTRYL', data=pirls)
 }
-
+}
