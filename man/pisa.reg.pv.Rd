@@ -2,10 +2,11 @@
 \alias{pisa.reg.pv}
 \title{Regression analysis with plausible values}
 \description{
-pisa.reg.pv performs standard linear regression analysis (OLS) while handling plausible values and replicate weights.
+pisa.reg.pv performs linear regression analysis (OLS) with plausible values and replicate weights.
 }
 \usage{
-pisa.reg.pv(x, pvlabel = "READ", by, data, export = FALSE, name = "output", folder = getwd())
+pisa.reg.pv(x, pvlabel = "READ", by, data, 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

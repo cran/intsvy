@@ -2,10 +2,11 @@
 \alias{timss.reg.pv}
 \title{Regression analysis with plausible values}
 \description{
-timss.reg.pv performs standard linear regression analysis (OLS) while handling plausible values and replicate weights.
+timss.reg.pv performs linear regression analysis (OLS) with plausible values and replicate weights.
 }
 \usage{
-timss.reg.pv(x, pvlabel = "ASRREA", weight = "TOTWGT", by, data, export = FALSE, name = "output", folder = getwd())
+timss.reg.pv(x, pvlabel = "BSMMAT", weight = "TOTWGT", by, 
+data, export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{
@@ -13,7 +14,7 @@ timss.reg.pv(x, pvlabel = "ASRREA", weight = "TOTWGT", by, data, export = FALSE,
 Data labels of independent variables.
 }
   \item{pvlabel}{
-The label corresponding to the achievement variable.
+The label corresponding to the achievement variable, for example, "BSMMAT", for overall math performance in Grade 8.
 }
   \item{weight}{
 The total weight, "TOTWGT" in the TIMSS dataset.

@@ -26,7 +26,7 @@ function(pvlabel="ASRREA", by, weight="TOTWGT", data, export=FALSE, name= "outpu
     mean.se <-  (v.meanw+v.meanb)^(1/2); sd.se <- (v.sdw+v.sdb)^(1/2)
     
 
-    result <- data.frame("n"= length(data[[weight]]), "Mean"= mean(R.mean), "s.e."= mean.se, 
+    result <- data.frame("Freq"= length(data[[weight]]), "Mean"= mean(R.mean), "s.e."= mean.se, 
                          "SD"=mean(R.sd), "s.e"=sd.se)
     
     return(round(result, 2))

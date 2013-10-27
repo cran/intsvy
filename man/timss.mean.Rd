@@ -7,7 +7,8 @@ Calculates mean of variable
 Calculates the mean of an observed variable (NOT one with plausible values) and its standard error.
 }
 \usage{
-timss.mean(variable, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+timss.mean(variable, by, weight = "TOTWGT", data, 
+export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{variable}{
@@ -20,7 +21,7 @@ The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL")
 The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
-An R object, normally a data frame, containing the data from PIRLS.
+An R object, normally a data frame, containing the data from TIMSS.
 }
   \item{export}{
 A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
@@ -47,7 +48,6 @@ timss.mean(variable='ASBGSLM', by='IDCNTRYL', data=timss4g)
 
 # TIMSS G8: Exhibit 2.17 User Guide TIMSS 2011, p. 27
 timss.mean(variable='BSBGSLM', by='IDCNTRYL', data=timss8g)
-
 }
 }
 

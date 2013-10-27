@@ -6,7 +6,8 @@
 pirls.mean.pv uses five plausible values to calculate the mean achievement score and its standard error
 }
 \usage{
-pirls.mean.pv(pvlabel = "ASRREA", by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.mean.pv(pvlabel = "ASRREA", by, weight = "TOTWGT", 
+data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{pvlabel}{

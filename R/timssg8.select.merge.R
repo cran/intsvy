@@ -1,6 +1,26 @@
 timssg8.select.merge <-
 function(folder=getwd(), countries, student=c(), school, math.teacher, science.teacher) {
   
+  # Remove leading and trailing whitespaces in var labes  
+  if(!missing(student) & !is.null(student)) {
+    student = gsub("^[[:space:]]+|[[:space:]]+$", "", student)
+  }
+  
+  if(!missing(school)){
+    school = gsub("^[[:space:]]+|[[:space:]]+$", "", school)
+  }
+  
+  if(!missing(math.teacher)){
+    math.teacher = gsub("^[[:space:]]+|[[:space:]]+$", "", math.teacher)
+  }
+  
+  if(!missing(science.teacher)){
+    science.teacher = gsub("^[[:space:]]+|[[:space:]]+$", "", science.teacher)
+  }
+  
+  # No variables selected (error)
+    
+  
   if (missing(student) & missing(school) & missing(math.teacher) & missing(science.teacher)) {
     stop("no variables are selected")
   }
@@ -22,7 +42,7 @@ function(folder=getwd(), countries, student=c(), school, math.teacher, science.t
   # setdiff(cntlab, iea.country$ISO) needs be zero! all elements in data labels are in userguide
   
   # Countries in the datasets and userguide
-  country.list <- iea.country[iea.country$ISO %in% intersect(iea.country$ISO, cntlab), ]
+  country.list <- iea.country[iea.country[["ISO"]] %in% intersect(iea.country[["ISO"]], cntlab), ]
   
   
   # If no countries are selected: seleect all

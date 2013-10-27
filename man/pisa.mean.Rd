@@ -7,7 +7,8 @@ Calculates mean of variable
 Calculates the mean of an observed variable (NOT one with plausible values) and its standard error.
 }
 \usage{
-pisa.mean(variable, by, data, export = FALSE, name = "output", folder = getwd())
+pisa.mean(variable, by, data, export = FALSE, 
+name = "output", folder = getwd())
 }
 
 \arguments{

@@ -1,16 +1,27 @@
 pisa.table <-
 function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   table.input <- function(variable, data) {
-    # Replicate weighted %s (sampling error)
-    tabrp <- sapply(1:80, function(i) percent(as.factor(as.numeric(data[[variable]])), total=FALSE, 
-             weights=  data[[paste("W_FSTR", i , sep="")]], na.rm=T))     
     
+    if (sum(is.na((data[[variable]])))==length(data[[variable]])) {
+      result <- data.frame(NA, "Freq"=0, "Percentage"=NA, "Std.err."= NA)  
+      names(result)[1] <- variable # var label for table, otherwise prints "Var1"
+      return(result)
+     }
+          
+    # Replicate weighted %s (sampling error)
+    tabrp <- as.matrix(sapply(1:80, function(i) percent(as.factor(as.numeric(data[[variable]])), total=FALSE, 
+             weights=  data[[paste("W_FSTR", i , sep="")]], na.rm=TRUE)))     
+
     # Total weighted %                                                                      
-    tabtot <- round(percent(as.factor(as.numeric(data[[variable]])), weights= data[["W_FSTUWT"]], na.rm = TRUE, total=F), 2)
+    tabtot <- percent(as.factor(as.numeric(data[[variable]])), weights= data[["W_FSTUWT"]], na.rm = TRUE, total=F)
     # Standard error
-    tabse <- round(sapply(1:length(table(as.numeric(data[[variable]]))), function(x)
-      (0.05*sum(sapply(1:80, function(y) (tabrp[x,y]-tabtot[[x]])^2)))^(1/2)), 2)
-    result <- data.frame(table(as.numeric(data[[variable]])), "Percentage"=as.numeric(tabtot), "Std.err."= tabse)
+    if (length(tabtot)!=1) {
+      tabse <- (0.05*apply((tabrp-tabtot)^2, 1, sum))^(1/2)
+    }
+    else {
+      tabse <-0
+    }
+    result <- data.frame(table(data[[variable]][drop=T]), "Percentage"=round(as.numeric(tabtot), 2), "Std.err."= round(tabse, 2))
     names(result)[1] <- variable # var label for table, otherwise prints "Var1"
     return(result)
   }
@@ -18,6 +29,7 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   if (missing(by)) { 
     output <- table.input(variable=variable, data=data)
   } else {
+  # Convert by variables to characters for ddply application
     for (i in by) {
       data[[c(i)]] <- as.character(data[[c(i)]])
     }

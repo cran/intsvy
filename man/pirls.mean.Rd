@@ -7,7 +7,8 @@ Calculates mean of variable
 Calculates the mean of an observed variable (NOT one with plausible values) and its standard error.
 }
 \usage{
-pirls.mean(variable, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.mean(variable, by, weight = "TOTWGT", data, 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

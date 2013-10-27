@@ -4,7 +4,7 @@
 Select and merge data
 }
 \description{
-pirls.select.merge selects and merges data from PIRLS.
+pirls.select.merge selects and merges data from PIRLS. Achievement and weight variabels (all of them) are selected by default.
 }
 \usage{
 pirls.select.merge(folder = getwd(), countries, student = c(), home, school, teacher)

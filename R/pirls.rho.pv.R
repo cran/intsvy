@@ -59,9 +59,9 @@ if (missing(by)) {
 output <- rho.pv.input(variable=variable, pvlabels=pvlabels, weight=weight, data=data)
   } else {
     if (length(pvlabels)==2 & missing(variable)) {
-    output <- lapply(split(data, data[by]), function(x) rho.pv.input(pvlabels=pvlabels, weight=weight, data=x))
+    output <- lapply(split(data, factor(data[[by]])), function(x) rho.pv.input(pvlabels=pvlabels, weight=weight, data=x))
     } else {
-      output <- lapply(split(data, data[by]), function(x) rho.pv.input(variable=variable, pvlabels=pvlabels, weight=weight, data=x))
+      output <- lapply(split(data, factor(data[[by]])), function(x) rho.pv.input(variable=variable, pvlabels=pvlabels, weight=weight, data=x))
     }
   }
   

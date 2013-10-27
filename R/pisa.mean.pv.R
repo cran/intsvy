@@ -10,11 +10,11 @@ function(pvlabel, by, data, export=FALSE, name= "output", folder=getwd()) {
     achmtot <- sapply(pvnames, function(x) weighted.mean(data[[x]], data[["W_FSTUWT"]], na.rm = TRUE))
     # Mean of means (the one is reported)
     achtot <- mean(achmtot)
-    # Sampling variance (1st PV); imputation variance; SEs
+    # Sampling variance; imputation variance; SEs
     varw <- mean(sapply(1:5, function(i) 0.05*sum((achmrp[,i]-achmtot[i])^2)))
     varb <- (1/(5-1))*sum(sapply(1:5, function(i) (achmtot[i]-achtot)^2))
     achse <-(varw+(1+1/5)*varb)^(1/2)
-    result <- data.frame("Mean"= achtot, "Std.err."= achse)
+    result <- data.frame("Freq"= sum(!is.na(data[[pvnames[1]]])), "Mean"= achtot, "Std.err."= achse)
     return(round(result, 2))
   }
   # If by no supplied, calculate for the complete sample    

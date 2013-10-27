@@ -6,7 +6,8 @@
 pirls.rho.pv calculates the correlation and standard error among two achievement variables each based on 5 plausible values or one achievement variable and an observed variable (i.e., with observed scores rather than plausible values).
 }
 \usage{
-pirls.rho.pv(variable, pvlabels, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.rho.pv(variable, pvlabels, by, weight = "TOTWGT", 
+data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{variable}{

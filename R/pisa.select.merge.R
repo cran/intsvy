@@ -1,6 +1,21 @@
 pisa.select.merge <-
 function(folder=getwd(), countries, student=c(), parent, school) {
   
+    # Remove leading and trailing whitespaces in var labes  
+  if(!missing(student) & !is.null(student)) {
+    student = gsub("^[[:space:]]+|[[:space:]]+$", "", student)
+  }
+  
+  if(!missing(parent)){
+    parent = gsub("^[[:space:]]+|[[:space:]]+$", "", parent)
+  }
+  
+  if(!missing(school)){
+    school = gsub("^[[:space:]]+|[[:space:]]+$", "", school)
+  }
+  
+  # No variables selected (error)  
+  
   if (missing(student) & missing(parent) & missing(school)) {
     stop("no variables are selected")
     }
@@ -15,17 +30,23 @@ function(folder=getwd(), countries, student=c(), parent, school) {
   list.name <- substr(files.all, nchar(files.all) - 14, nchar(files.all) - 10)
   names(files.all) <- list.name
   
+  
+  # Countries in dataset
+  country <- unique(as.data.frame(adj.measlev(spss.system.file(files.all[["SCQ09"]])[, c("CNT", "COUNTRY")])))
+  
+  # If countries missing, all countries selected
   if (missing(countries)) {
-    countries <- unique(spss.system.file(files.all[["STQ09"]])[, c("CNT")][])
+    countries <- country$CNT
   }
-    
   
-  # Participating countries
+  # If countries are entered numerically, change to ISO labels for file selection (next)
+  if (is.numeric(countries)) {
+    countries=country[as.numeric(country$COUNTRY) %in% countries, "CNT"]
+  }
   
-  country <- as.data.frame(adj.measlev(spss.system.file(files.all[[3]])[, c("CNT", "COUNTRY")]))
   
-  # Participating countries in dataset (must be all)
-  country.list <- pisa.country[pisa.country$ISO %in% unique(country$CNT) , ]
+  # Create country list with long names for merging (IDCNTRYL)
+  country.list <- pisa.country[pisa.country[["ISO"]] %in% country$CNT, ]
   rownames(country.list) <-NULL
     
   # Have to use spss.system.file, otherwise read.spss crashes

@@ -7,7 +7,8 @@ Correlation matrix
 timss.rho produces a correlations matrix for observed variables (NOT for plausible values)
 }
 \usage{
-timss.rho(variables, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+timss.rho(variables, by, weight = "TOTWGT", data, 
+export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{variables}{

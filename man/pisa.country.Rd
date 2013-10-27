@@ -9,9 +9,9 @@
 \format{
   A data frame with 243 observations on the following 3 variables.
   \describe{
-    \item{\code{Country}}{a character vector}
-    \item{\code{ISO}}{a character vector}
-    \item{\code{Code}}{a numeric vector}
+    \item{\code{Country}}{Country name}
+    \item{\code{ISO}}{Country abbreviation}
+    \item{\code{Code}}{Country code}
   }
 }
 

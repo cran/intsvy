@@ -4,7 +4,7 @@
 Select and merge data
 }
 \description{
-timssg4.select.merge selects and merges data from TIMSS G4.
+timssg4.select.merge selects and merges data from TIMSS G4. Achievement and weight variables (all of them) are selected by default.
 }
 \usage{
 timssg4.select.merge(folder = getwd(), countries, student = c(), home, school, teacher)

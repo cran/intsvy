@@ -20,7 +20,7 @@ function(variables, by, weight="TOTWGT", data, export=FALSE, name= "output", fol
     output <- rho.input(variables=variables, weight=weight, data=data) 
   }
   else {
-    output <- lapply(split(data, data[by]), function(x) rho.input(variables=variables, weight=weight, data=x))
+    output <- lapply(split(data, factor(data[[by]])), function(x) rho.input(variables=variables, weight=weight, data=x))
   }
 
   if (export)  {

@@ -7,7 +7,8 @@ Frequency table
 timss.table produces a frequency table for a categorical variable printing percentages and standard errors.
 }
 \usage{
-timss.table(variable, by, data, weight = "TOTWGT", export = FALSE, name = "output", folder = getwd())
+timss.table(variable, by, data, weight = "TOTWGT", 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

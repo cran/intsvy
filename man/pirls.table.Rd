@@ -7,7 +7,8 @@ Frequency table
 pirls.table produces a frequency table for a categorical variable printing percentages and standard errors.
 }
 \usage{
-pirls.table(variable, by, data, weight = "TOTWGT", export = FALSE, name = "output", folder = getwd())
+pirls.table(variable, by, data, weight = "TOTWGT", 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

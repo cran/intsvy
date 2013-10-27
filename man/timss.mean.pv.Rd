@@ -7,12 +7,13 @@ Calculates mean achievement score
 timss.mean.pv uses five plausible values to calculate the mean achievement score and its standard error
 }
 \usage{
-timss.mean.pv(pvlabel = "ASRREA", by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+timss.mean.pv(pvlabel = "BSMMAT", by, weight = "TOTWGT", data, 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{
   \item{pvlabel}{
-The label corresponding to the achievement variable, for example, "BSMMAT", for overall reading performance.
+The label corresponding to the achievement variable, for example, "BSMMAT", for overall math performance in Grade 8.
 }
   \item{by}{
 The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
@@ -21,7 +22,7 @@ The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL")
 The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
-An R object, normally a data frame, containing the data from PIRLS.
+An R object, normally a data frame, containing the data from TIMSS.
 }
   \item{export}{
 A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 

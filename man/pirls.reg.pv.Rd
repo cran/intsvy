@@ -2,10 +2,11 @@
 \alias{pirls.reg.pv}
 \title{Regression analysis with plausible values}
 \description{
-pirls.reg.pv performs standard linear regression analysis (OLS) while handling plausible values and replicate weights.
+pirls.reg.pv performs linear regression analysis (OLS) with plausible values and replicate weights.
 }
 \usage{
-pirls.reg.pv(x, pvlabel = "ASRREA", weight = "TOTWGT", by, data, export = FALSE, name = "output", folder = getwd())
+pirls.reg.pv(x, pvlabel = "ASRREA", weight = "TOTWGT", by, 
+data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{x}{
@@ -48,7 +49,7 @@ timss.reg.pv, pisa.reg.pv
 # PIRLS: Exhibit 2.11, User Guide PIRLS 2011, p.21
 pirls$SEX[pirls$ITSEX=="BOY"]=1
 pirls$SEX[pirls$ITSEX=="GIRL"]=0
-pirls.reg.pv(pvlabel="ASRREA", by=c("IDCNTRYL"), x="SEX", data=pirls)
+pirls.reg.pv(pvlabel="ASRREA", by="IDCNTRYL", x="SEX", data=pirls)
 }
 }
 

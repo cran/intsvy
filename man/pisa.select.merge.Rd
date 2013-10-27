@@ -4,7 +4,7 @@
 Select and merge data
 }
 \description{
-pisa.select.merge selects and merges data from TIMSS G4.
+pisa.select.merge selects and merges data from TIMSS G4. Achievement and weight variables (all of them) are selected by default.
 }
 \usage{
 pisa.select.merge(folder = getwd(), countries, student = c(), parent, school)
@@ -14,7 +14,7 @@ pisa.select.merge(folder = getwd(), countries, student = c(), parent, school)
 Directory path where the data are located. The data could be organized within folders but it should not be duplicated.
 }
   \item{countries}{
-The selected countries, supplied with the abbreviation (e.g., countries=c("DEU", "NOR"). If no countries are selected, all are selected.
+The selected countries, supplied with the abbreviation (e.g., countries=c("DEU", "NOR") or codes. If no countries are selected, all are selected.
 }
   \item{student}{
 The data labels for the selected student variables. 
@@ -37,10 +37,10 @@ timssg4.select.merge, timssg8.select.merge, pirls.select.merge
 \examples{
 \dontrun{
 pisa <- pisa.select.merge(folder=getwd(), 
-                          countries = c("DEU", "NOR", "GBR", "SGP"), 
-                          student = c("HOMEPOS", "ESCS", "PARED", "HISEI", "ST01Q01", "ST04Q01", "ST20Q10"),
-                          parent = c("READRES", "PARINVOL", "CURSUPP"), 
-                          school = c("RESPCURR", "RESPRES",  "SCMATEDU", "STUDBEHA")))
+        countries = c("DEU", "NOR", "GBR", "SGP"), 
+        student = c("HOMEPOS", "ESCS", "PARED", "HISEI", "ST01Q01", "ST04Q01", "ST20Q10"),
+        parent = c("READRES", "PARINVOL", "CURSUPP"), 
+        school = c("RESPCURR", "RESPRES",  "SCMATEDU", "STUDBEHA")))
 }
 }
 

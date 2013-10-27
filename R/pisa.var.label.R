@@ -1,27 +1,29 @@
 pisa.var.label <-
 function(folder=getwd(), name="Variable labels", output=getwd()) {
   
+  # Retrieve file name
   files.all <- lapply(c("INT_ST", "INT_PA", "INT_SC"), function(x) list.files(folder, 
-   full.names= TRUE, pattern=paste("^", x, ".*.sav$", sep=""), recursive=TRUE))
-
+        full.names= TRUE, pattern=paste("^", x, ".*.sav$", sep=""), recursive=TRUE))
+    
   if (sum(sapply(files.all, length))==0){
     stop(paste("cannot locate the original files in", folder))
   }
   
-  list.name <- substr(files.all, nchar(files.all) - 14, nchar(files.all) - 10)
-  names(files.all) <- list.name
-
+  # Add names to list
+  list.name <- substr(files.all, nchar(files.all) - 18, nchar(files.all) - 13)
+  names(files.all) <- file.names[file.names[["Abv"]] %in% list.name, "Instrument"]
+  
+  # Retrieve var labels
   var.label <- lapply(files.all, function(x) description(spss.system.file(x[[1]])))
   
-  # Participating countries
-  
-  country <- as.data.frame(adj.measlev(spss.system.file(files.all[[3]])[, c("CNT", "COUNTRY")]))
+  # Participating countries (from school file)
+  country <- unique(as.data.frame(adj.measlev(spss.system.file(grep("INT_SC", files.all, value=T))[, c("CNT", "COUNTRY")])))
   
   # Participating countries in dataset (must be all)
-  country.list <- pisa.country[pisa.country$ISO %in% unique(country$CNT) , ]
+  country.list <- pisa.country[pisa.country[["ISO"]] %in% country$CNT, ]
   rownames(country.list) <-NULL
   
-  # setdiff(unique(country$CNT), pisa.country$ISO) must be zero
+  # setdiff(country$CNT, pisa.country$ISO) must be zero
     
   var.label[[length(files.all)+1]] <- country.list
   names(var.label)[length(var.label)] <-"Participating countries"

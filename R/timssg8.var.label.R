@@ -13,7 +13,7 @@ function(folder=getwd(),name="Variable labels", output=getwd()) {
   abv <- unique(unlist(lapply(files.all, function(x) substr(x, nchar(x)-11, nchar(x)-9)))) 
   
   # Name list for existing datasets
-  names(files.all) <- iea.data.id[iea.data.id$Abv %in% abv, "Instrument"]
+  names(files.all) <- file.names[file.names[["Abv"]] %in% abv, "Instrument"]
     
   # Remove null elements (e.g. no teacher datasets)
   files.all<- files.all[lapply(files.all, length)!=0]
@@ -24,7 +24,7 @@ function(folder=getwd(),name="Variable labels", output=getwd()) {
   # setdiff(cntlab, iea.country$ISO) needs be zero! all elements in data labels are in userguide
   
   # Countries in the datasets and userguide
-  country.list <- iea.country[iea.country$ISO %in% intersect(iea.country$ISO, cntlab), ]
+  country.list <- iea.country[iea.country[["ISO"]] %in% intersect(iea.country[["ISO"]], cntlab), ]
   rownames(country.list)<-NULL # remove subset rownames
 
   # Variable labels

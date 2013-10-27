@@ -4,10 +4,11 @@
 Correlation matrix
 }
 \description{
-pirls.rho produces a correlations matrix for observed variables (NOT for plausible values)
+pirls.rho produces a correlation matrix for observed variables (NOT for plausible values)
 }
 \usage{
-pirls.rho(variables, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.rho(variables, by, weight = "TOTWGT", data, 
+export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

@@ -5,7 +5,8 @@
 pirls.ben.pv calculates the percentage of students performing at or above the cut-off points (scores) given by the useR. The default are the benchmarks established by PIRLS/TIMSS
 }
 \usage{
-pirls.ben.pv(pvlabel, cutoff = c(400, 475, 550, 625), by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.ben.pv(pvlabel, cutoff = c(400, 475, 550, 625), by, weight = "TOTWGT", 
+data, export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{

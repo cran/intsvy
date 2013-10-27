@@ -1,10 +1,11 @@
 \name{pirls.reg}
 \alias{pirls.reg}
 \title{Regression analysis}
-\description{pirls.reg performs standard linear regression analysis (OLS) for an observed depedent variable (NOT for plausible values)
+\description{pirls.reg performs linear regression analysis (OLS) for an observed depedent variable (NOT for plausible values)
 }
 \usage{
-pirls.reg(y, x, by, weight = "TOTWGT", data, export = FALSE, name = "output", folder = getwd())
+pirls.reg(y, x, by, weight = "TOTWGT", data, export = FALSE, 
+name = "output", folder = getwd())
 }
 \arguments{
   \item{y}{
