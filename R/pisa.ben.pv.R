@@ -1,5 +1,5 @@
-pisa.ben.pv <-
-function(pvlabel, cutoff = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32), by, weight="W_FSTUWT", data, 
+pisa.ben.pv <- 
+function(pvlabel, cutoff = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30), by, weight="W_FSTUWT", data, 
                          export=FALSE, name= "output", folder=getwd()) {
   # PV variable names
   pvnames <- paste("PV", 1:5, pvlabel, sep="")

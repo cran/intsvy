@@ -7,12 +7,22 @@ Data labels
 pisa.var.labels prints and saves variable labels and names of participating countries in a text file
 }
 \usage{
-pisa.var.label(folder = getwd(), name = "Variable labels", output = getwd())
+pisa.var.label(folder=getwd(), student.file, parent.file=c(), school.file=c(), 
+name="Variable labels", output=getwd())
 }
 
 \arguments{
   \item{folder}{
-Directory path where the PISA data are located. The data could be organized within folders but it should not be duplicated.
+Directory path where the PISA data are located, if all the data are located in the same folder.
+}
+  \item{student.file}{
+Student file name if 'folder' is provided, otherwise full path name of student dataset (required argument).
+}
+  \item{parent.file}{
+Parent file name if 'folder' is provided, otherwise full path name of parent dataset.
+}
+  \item{school.file}{
+School file name if 'folder' is provided, otherwise full path name of school dataset.
 }
    \item{name}{
 Name of output file.
@@ -32,6 +42,7 @@ timssg4.var.label, timssg8.var.label, pirls.var.label
 }
 \examples{
 \dontrun{
-pisa.var.label(folder= getwd())
+pisa.var.label(folder=getwd(), school.file="INT_SCQ12_DEC03.sav", 
+student.file="INT_STU12_DEC03.sav", parent.file="INT_PAQ12_DEC03.sav")
 }
 }

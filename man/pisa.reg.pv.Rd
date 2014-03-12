@@ -42,7 +42,8 @@ timss.reg.pv, pirls.reg.pv
 }
 \examples{
 \dontrun{
-pisa.mean.pv(pvlabel = "READ", by = c("IDCNTRYL", "ST04Q01"), data = pisa)
+# Table I.2.3a, p. 305, International Report 2012
+pisa.reg.pv(pvlabel="MATH", x="ST04Q01", by = "IDCNTRYL", data=pisa)
 }
 }
 

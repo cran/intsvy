@@ -7,7 +7,7 @@
 }
 \usage{data(pisa.country)}
 \format{
-  A data frame with 243 observations on the following 3 variables.
+  A data frame with 248 observations on the following 3 variables.
   \describe{
     \item{\code{Country}}{Country name}
     \item{\code{ISO}}{Country abbreviation}

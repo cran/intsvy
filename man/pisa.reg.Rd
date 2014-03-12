@@ -42,5 +42,6 @@ pirls.reg, timss.reg
 }
 \examples{
 \dontrun{
-pisa.reg(y="ESCS", x=c("IMMIG"), by="IDCNTRYL", data=pisa)
+# Table III.2.3d, p. 252 International Report 2012
+pisa.reg(y="BELONG", x="ST04Q01", by="IDCNTRYL", data=pisa)
 }}

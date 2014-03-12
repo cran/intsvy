@@ -40,17 +40,15 @@ timss.mean.pv, pirls.mean.pv
 }
 \examples{
 \dontrun{
+# Table I.2.3a, p. 305 International Report 2012 
+pisa.mean.pv(pvlabel = "MATH", by = "IDCNTRYL", data = pisa)
+pisa.mean.pv(pvlabel = "MATH", by = c("IDCNTRYL", "ST04Q01"), data = pisa)
+
+# Table III.2.1a, p. 232, International Report 2012
+pisa.mean.pv(pvlabel="MATH", by=c("IDCNTRYL", "ST08Q01"), data=pisa)
+
 # Figure I.2.16 p. 56 International Report 2009
 pisa.mean.pv(pvlabel = "READ", by = "IDCNTRYL", data = pisa)
-
-# Figure I.2.3 p. 197 International Report 2009
-pisa.mean.pv(pvlabel = "READ", by = c("IDCNTRYL", "ST04Q01"), data = pisa)
-
-# Figure I.3.11 p.135 International Report 2009
-pisa.mean.pv(pvlabel = "MATH", by = "IDCNTRYL", data = pisa)
-
-# Figure I.3.22 p.152 International Report 2009
-pisa.mean.pv(pvlabel = "SCIE", by = "IDCNTRYL", data = pisa)
 }
 }
 

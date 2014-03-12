@@ -1,4 +1,4 @@
-pisa.mean.pv <-
+pisa.mean.pv <- 
 function(pvlabel, by, data, export=FALSE, name= "output", folder=getwd()) {
   pv.input <- function(pvlabel="READ", data) {
     # PV variable names
@@ -33,3 +33,4 @@ function(pvlabel, by, data, export=FALSE, name= "output", folder=getwd()) {
   
   return(output)
 }
+

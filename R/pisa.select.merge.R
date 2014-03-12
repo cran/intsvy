@@ -1,75 +1,83 @@
-pisa.select.merge <-
-function(folder=getwd(), countries, student=c(), parent, school) {
+pisa.select.merge <- 
+function(folder=getwd(), student.file, parent.file=c(), school.file=c(), countries, student=c(), parent, school) {
   
-    # Remove leading and trailing whitespaces in var labes  
+  # Remove leading and trailing whitespaces in var labes  
   if(!missing(student) & !is.null(student)) {
     student = gsub("^[[:space:]]+|[[:space:]]+$", "", student)
+    student =toupper(student)
   }
   
   if(!missing(parent)){
     parent = gsub("^[[:space:]]+|[[:space:]]+$", "", parent)
+    parent = toupper(parent)
   }
   
   if(!missing(school)){
     school = gsub("^[[:space:]]+|[[:space:]]+$", "", school)
+    school = toupper(school)
   }
   
   # No variables selected (error)  
   
   if (missing(student) & missing(parent) & missing(school)) {
     stop("no variables are selected")
-    }
-  
-  files.all <- lapply(c("INT_ST", "INT_PA", "INT_SC"), function(x) list.files(folder, 
-               full.names= TRUE, pattern=paste("^", x, ".*.sav$", sep=""), recursive=TRUE))
-  
-  if (sum(sapply(files.all, length))==0){
-    stop(paste("cannot locate the original files in", folder))
   }
   
-  list.name <- substr(files.all, nchar(files.all) - 14, nchar(files.all) - 10)
-  names(files.all) <- list.name
+  # Creating student, parent, and school filepaths 
   
+  # Student file required for country labels
+  if(missing(student.file)) {
+  stop("the student file is required")
+  }
   
-  # Countries in dataset
-  country <- unique(as.data.frame(adj.measlev(spss.system.file(files.all[["SCQ09"]])[, c("CNT", "COUNTRY")])))
+  if(!missing(folder) & !missing(student.file)) {
+    student.file =   file.path(folder, paste(student.file, sep=""))
+  }
+  
+  if(!missing(folder) & !missing(school.file)) {
+    school.file =  file.path(folder, paste(school.file, sep=""))
+  }
+  
+  if(!missing(folder) & !missing(parent.file)) {
+    parent.file =  file.path(folder, paste(parent.file, sep=""))
+  }
+  
+  # Retrieve file names
+  files.all <- list(student.file, parent.file, school.file)
+  names(files.all) <- c('Student', 'Parent', 'School')
+  
+  # Remove null elements in list
+  files.all <- files.all[lapply(files.all, length)>0]
+  
+  # Participating countries (from student file)
+  pisa.student <- spss.system.file(files.all[["Student"]])
+  country <- names(table(pisa.student[,"CNT"]))
   
   # If countries missing, all countries selected
   if (missing(countries)) {
-    countries <- country$CNT
+    countries <- country
   }
   
   # If countries are entered numerically, change to ISO labels for file selection (next)
   if (is.numeric(countries)) {
-    countries=country[as.numeric(country$COUNTRY) %in% countries, "CNT"]
+    countries=pisa.country[pisa.country$Code %in% countries, "ISO"]
   }
   
-  
-  # Create country list with long names for merging (IDCNTRYL)
-  country.list <- pisa.country[pisa.country[["ISO"]] %in% country$CNT, ]
-  rownames(country.list) <-NULL
-    
   # Have to use spss.system.file, otherwise read.spss crashes
   
   # Student data (need for school and parent data too)
   
   if (!missing(student) | !missing(parent)) {
-  
-  if (is.null(files.all[["STQ09"]])) {
-    stop("cannot locate student data file")
-  }
     
-     
-  pisa.student <- spss.system.file(files.all[["STQ09"]])
-  names(pisa.student) <- toupper(names(pisa.student))
-  
-  student.data <- pisa.student[pisa.student["CNT"] %in% countries, 
-                  c("CNT", "COUNTRY", "OECD", "SCHOOLID", "STIDSTD",  
-                   names(pisa.student)[grep("^PV", names(pisa.student))], student,
-                   names(pisa.student)[grep("^W_F", names(pisa.student))])]
-  
-  student.data <- as.data.frame(adj.measlev(student.data))
-  
+    names(pisa.student) <- toupper(names(pisa.student)) # because stidstd is lowercase sometimes
+    
+    student.data <- pisa.student[pisa.student["CNT"] %in% countries, 
+                                 c("CNT", "SCHOOLID", "STIDSTD",  
+                                   names(pisa.student)[grep("^PV", names(pisa.student))], student,
+                                   names(pisa.student)[grep("^W_F", names(pisa.student))])]
+    
+    student.data <- as.data.frame(adj.measlev(student.data))
+    
   }
   
   
@@ -77,16 +85,16 @@ function(folder=getwd(), countries, student=c(), parent, school) {
   
   if (!missing(parent)) {
     
-    if (is.null(files.all[["PAQ09"]])) {
+    if (is.null(files.all[["Parent"]])) {
       stop("cannot locate parental questionnaire data file")
     }
     
     
-    pisa.parent <- spss.system.file(files.all[["PAQ09"]])
+    pisa.parent <- spss.system.file(files.all[["Parent"]])
     names(pisa.parent) <- toupper(names(pisa.parent))
     
     parent.data <- pisa.parent[pisa.parent["CNT"] %in% countries, 
-                                 c("CNT", "COUNTRY", "OECD", "SCHOOLID", "STIDSTD", parent)]
+                               c("CNT", "SCHOOLID", "STIDSTD", parent)]
     
     parent.data <- as.data.frame(adj.measlev(parent.data))
     
@@ -97,16 +105,16 @@ function(folder=getwd(), countries, student=c(), parent, school) {
   
   if (!missing(school)) {
     
-    if (is.null(files.all[["SCQ09"]])) {
+    if (is.null(files.all[["School"]])) {
       stop("cannot locate school data file")
     }
     
     
-    pisa.school <- spss.system.file(files.all[["SCQ09"]])
+    pisa.school <- spss.system.file(files.all[["School"]])
     names(pisa.school) <- toupper(names(pisa.school))
     
     school.data <- pisa.school[pisa.school["CNT"] %in% countries, 
-                   c("CNT", "COUNTRY", "OECD", "SCHOOLID", school, "W_FSCHWT")]
+                               c("CNT", "OECD", "SCHOOLID", school, "W_FSCHWT")]
     
     school.data <- as.data.frame(adj.measlev(school.data))
     
@@ -122,49 +130,46 @@ function(folder=getwd(), countries, student=c(), parent, school) {
   }
   
   if (!missing(student) & !missing(parent) & missing(school)) {
-    pisa.all <- merge(student.data, parent.data, all.x=TRUE, by=c("COUNTRY", "SCHOOLID", "STIDSTD"))
-    pisa.all <- pisa.all[, -c(grep("*.y", names(pisa.all)))]
+    pisa.all <- merge(student.data, parent.data, all.x=TRUE, by=c("CNT", "SCHOOLID", "STIDSTD"))
+    pisa.all[, grep("*.y", names(pisa.all))] <- NULL
     names(pisa.all) <- gsub("*.x", "", names(pisa.all))
   }
   
   if (!missing(student) & missing(parent) & !missing(school)) {
-    pisa.all <- merge(student.data, school.data, all.x=TRUE, by=c("COUNTRY", "SCHOOLID"))
-    pisa.all <- pisa.all[, -c(grep("*.y", names(pisa.all)))]
+    pisa.all <- merge(student.data, school.data, all.x=TRUE, by=c("CNT", "SCHOOLID"))
+    pisa.all[, grep("*.y", names(pisa.all))] <- NULL
     names(pisa.all) <- gsub("*.x", "", names(pisa.all))
   }
   
   if (!missing(student) & !missing(parent) & !missing(school)) {
-    pisa.all <- merge(student.data, parent.data, all.x=TRUE, by=c("COUNTRY", "SCHOOLID", "STIDSTD"))
-    pisa.all <- merge(pisa.all, school.data, by=c("COUNTRY", "SCHOOLID"))
-    pisa.all <- pisa.all[, -c(grep("*.y", names(pisa.all)))]
+    pisa.all <- merge(student.data, parent.data, all.x=TRUE, by=c("CNT", "SCHOOLID", "STIDSTD"))
+    pisa.all <- merge(pisa.all, school.data, all.x=TRUE, by=c("CNT", "SCHOOLID"))
+    pisa.all[, grep("*.y", names(pisa.all))] <- NULL
     names(pisa.all) <- gsub("*.x", "", names(pisa.all))
   }
   
   # Parent data available
   
-  if (missing(student) & !missing(parent) & missing(school)) {
-    pisa.all <- merge(student.data, parent.data, by=c("COUNTRY", "SCHOOLID", "STIDSTD"))
-    pisa.all <- pisa.all[, -c(grep("*.y", names(pisa.all)))]
+  if (is.null(student) & !missing(parent) & missing(school)) {
+    pisa.all <- merge(student.data, parent.data, by=c("CNT", "SCHOOLID", "STIDSTD"))
+    pisa.all[, grep("*.y", names(pisa.all))] <- NULL
     names(pisa.all) <- gsub("*.x", "", names(pisa.all))
   }
   
-  if (missing(student) & !missing(parent) & !missing(school)) {
-    pisa.all <- merge(school.data, parent.data, by=c("COUNTRY", "SCHOOLID"))
-    pisa.all <- pisa.all[, -c(grep("*.y", names(pisa.all)))]
+  if (is.null(student) & !missing(parent) & !missing(school)) {
+    pisa.all <- merge(school.data, parent.data, by=c("CNT", "SCHOOLID"))
+    pisa.all[, grep("*.y", names(pisa.all))] <- NULL
     names(pisa.all) <- gsub("*.x", "", names(pisa.all))
   }
   
   # School data available
   
-  if (missing(student) & missing(parent) & !missing(school)) {
+  if (is.null(student) & missing(parent) & !missing(school)) {
     pisa.all <- school.data
   }
   
-  
   # Create country label variable (not possible to add labels to numeric factor, see to do list)
-  pisa.all$IDCNTRYL <- factor(pisa.all$CNT,  
-             levels=country.list[country.list$ISO %in% unique(pisa.all$CNT), "ISO"] ,        
-             labels= country.list[country.list$ISO %in% unique(pisa.all$CNT), "Country"])
-  
+  pisa.all$IDCNTRYL <- pisa.country[match(pisa.all$CNT, pisa.country$ISO), "Country"]
+    
   return(pisa.all)
 }

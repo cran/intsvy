@@ -1,4 +1,4 @@
-pisa.table <-
+pisa.table <- 
 function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   table.input <- function(variable, data) {
     

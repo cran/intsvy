@@ -19,7 +19,7 @@ The label corresponding to the observed variable, for example, ""ESCS"", for the
 The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
 }
   \item{data}{
-An R object, normally a data frame, containing the data from PIRLS.
+An R object, normally a data frame, containing the data from PISA.
 }
   \item{export}{
 A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
@@ -41,7 +41,12 @@ timss.mean, pirls.mean
 }
 \examples{
 \dontrun{
-# PISA 2009 International Report Table II.1.1, p. 152
+# PISA 2012: Table II.2.3, p. 183
 pisa.mean(variable="ESCS", by="IDCNTRYL", data=pisa)
+pisa.mean(variable="PARED", by="IDCNTRYL", data=pisa)
+
+# PISA 2012: Table III.2.3d, p. 252
+pisa.mean(variable="BELONG", by="IDCNTRYL", data=pisa)
+pisa.mean(variable="BELONG", by=c("IDCNTRYL", "ST04Q01"), data=pisa)
 }
 }

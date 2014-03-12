@@ -1,4 +1,4 @@
-pisa.mean <-
+pisa.mean <- 
 function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   mean.input <- function(variable, data) {
     # Replicate weight means (sampling error)
@@ -28,3 +28,4 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd()) {
   
   return(output)
 }
+

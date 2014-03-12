@@ -40,8 +40,9 @@ timss.table, pirls.table
 }
 \examples{
 \dontrun{
-# Table A2.4a, p.180 International Report 2009 Volume 1
+# Table A2.4a, p.274 International Report 2012 Volume I
 pisa.table(variable="ST01Q01", by="IDCNTRYL", data=pisa)
+# Table III.2.1a, p. 232, International Report 2012 Volume III
+pisa.table(variable="ST08Q01", by="IDCNTRYL", data=pisa)
 }
 }
-

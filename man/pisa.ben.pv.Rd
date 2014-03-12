@@ -4,8 +4,8 @@
 \description{Calculates percentage of students at each proficiency level defined by PISA. Or at proficiency levels provided by the useR.
 }
 \usage{
-pisa.ben.pv(pvlabel, cutoff = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32), 
-by, weight= "W_FSTUWT", data, export = FALSE, name = "output", folder = getwd())
+pisa.ben.pv(pvlabel, cutoff = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30), 
+by, weight="W_FSTUWT", data, export=FALSE, name= "output", folder=getwd())
 }
 \arguments{
   \item{pvlabel}{
@@ -43,7 +43,7 @@ timss.ben.pv, pirls.ben.pv
 }
 \examples{
 \dontrun{
-# Table I.2.1 p.194 International Report 2009 Volume I
-pisa.ben.pv(pvlabel="READ", by="IDCNTRYL", data=pisa)
+# Table I.2.1a, p. 298 International Report 2012 Volume I
+pisa.ben.pv(pvlabel="MATH", by="IDCNTRYL", data=pisa)
 }
 }
