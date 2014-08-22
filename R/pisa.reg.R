@@ -34,7 +34,7 @@ function(y, x, by, data, export=FALSE, name= "output", folder=getwd()) {
     output <- reg.input(y=y, x=x, data=data)
   } else {
     output <- lapply(split(data, droplevels(data[by])), function(i) reg.input(y=y, x=x, data=i))
-    
+    class(output) <- "intsvy.reg"
   }
   
   if (export)  {
