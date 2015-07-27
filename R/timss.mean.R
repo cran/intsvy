@@ -15,12 +15,19 @@ function(variable, by, weight="TOTWGT", data, export=FALSE, name= "output", fold
   if (missing(by)) { 
     output<-mean.input(variable=variable, weight=weight, data=data)
   } else {
+    
+    for (i in by) {
+      data[[c(i)]] <- as.factor(data[[c(i)]])
+    }
+    
     output<-ddply(data, by, function(x) mean.input(data=x, weight=weight, variable=variable))
   }
   
   if (export)  {
     write.csv(output, file=file.path(folder, paste(name, ".csv", sep="")))
   }
+  
+  class(output) <- c("intsvy.mean", "data.frame")
   
   return(output)
 }

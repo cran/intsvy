@@ -6,7 +6,7 @@ timss.reg.pv performs linear regression analysis (OLS) with plausible values and
 }
 \usage{
 timss.reg.pv(x, pvlabel = "BSMMAT", weight = "TOTWGT", by, 
-data, export = FALSE, name = "output", folder = getwd())
+data, std=FALSE, export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{
@@ -25,7 +25,10 @@ The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL")
   \item{data}{
 An R object, normally a data frame, containing the data from TIMSS.
 }
-  \item{export}{
+  \item{std}{
+A logical value. If TRUE standardised regression coefficients are calculated.
+}
+\item{export}{
 A logical value. If TRUE, the output is exported to a file in comma-separated value format (.csv) that can be opened from LibreOffice or Excel. 
 }
   \item{name}{
@@ -37,7 +40,7 @@ The folder where the exported file is located.
 }
 
 \value{
-timss.reg.pv returns a data frame with coefficients, standard errors and t-values. If "by" is specified, results are reported in a list. 
+timss.reg.pv prints a data.frame with regression results (i.e., coefficients, standard errors, t-values, R-squared) and stores  different regression output including residuals, replicate coefficients, variance within and between, and the regression data.frame in a list object of class "intsvy.reg". 
 }
 
 \seealso{

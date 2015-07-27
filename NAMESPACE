@@ -3,14 +3,23 @@ importFrom(memisc, percent, spss.system.file, description, measurement)
 importFrom(reshape, melt)
 importFrom(foreign, read.spss)
 importFrom(plyr, ddply)
+importFrom(Hmisc, wtd.quantile)
+
+importFrom("stats", "as.formula", "cov.wt", "glm", "lm", "na.omit",
+             "quasibinomial", "reorder", "sd", "var", "weighted.mean")
+importFrom("utils", "capture.output", "write.csv") 
+
 export(
 plot.intsvy.mean,
 plot.intsvy.table,
 plot.intsvy.reg,
 
 pirls.ben.pv,
+pirls.log,
+pirls.log.pv,
 pirls.mean.pv,
 pirls.mean,
+pirls.per.pv,
 pirls.reg.pv,
 pirls.reg,
 pirls.rho.pv,
@@ -27,8 +36,11 @@ piaac.reg.pv,
 piaac.reg,
 
 pisa.ben.pv,
+pisa.log,
+pisa.log.pv,
 pisa.mean.pv,
 pisa.mean,
+pisa.per.pv,
 pisa.reg.pv,
 pisa.reg,
 pisa.select.merge,
@@ -36,8 +48,11 @@ pisa.table,
 pisa.var.label,
 
 timss.ben.pv,
+timss.log,
+timss.log.pv,
 timss.mean.pv,
 timss.mean,
+timss.per.pv,
 timss.reg.pv,
 timss.reg,
 timss.rho.pv,
@@ -47,4 +62,11 @@ timss.table,
 timssg4.select.merge,
 timssg4.var.label,
 timssg8.select.merge,
-timssg8.var.label)
+timssg8.var.label
+)
+
+S3method(summary, intsvy.reg)
+S3method(print, intsvy.reg)
+S3method(plot, intsvy.mean)
+S3method(plot, intsvy.reg)
+S3method(plot, intsvy.table)

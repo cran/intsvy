@@ -1,5 +1,5 @@
 timssg8.select.merge <-
-function(folder=getwd(), countries, student=c(), school, math.teacher, science.teacher) {
+function(folder=getwd(), countries, student=c(), school, math.teacher, science.teacher, use.labels=TRUE) {
   
   # Remove leading and trailing whitespaces in var labes  
   if(!missing(student) & !is.null(student)) {
@@ -68,13 +68,12 @@ function(folder=getwd(), countries, student=c(), school, math.teacher, science.t
       stop('cannot locate student data files')
     }
     
-    suppressWarnings(suppressMessages(student.data <- do.call("rbind",             # Merge [[1]] student
-    lapply(files.select[['bsg']], function(y) 
-    read.spss(y, to.data.frame=T)
-    [c("IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD", "JKREP",         # IDs/Weights/PVs
-    "JKZONE", "HOUWGT", "SENWGT", "TOTWGT",      
-    "BSMMAT01", "BSMMAT02", "BSMMAT03", "BSMMAT04", "BSMMAT05",                               
-    "BSSSCI01", "BSSSCI02", "BSSSCI03", "BSSSCI04", "BSSSCI05", student)]))))    
+    suppressWarnings(suppressMessages(junk0 <- lapply(files.select[['bsg']], function(y) 
+      read.spss(y, to.data.frame=TRUE, use.value.labels=use.labels))))
+    
+    student.data <- do.call('rbind', lapply(junk0, function(x) x[, c("IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD", 
+    grep("^BS.*0[0-5]$", names(x), value=TRUE), student, "JKREP","JKZONE", "HOUWGT", "SENWGT", "TOTWGT")]))
+    
   }
   
   
@@ -105,10 +104,10 @@ function(folder=getwd(), countries, student=c(), school, math.teacher, science.t
     
     
     suppressWarnings(suppressMessages(teach.l <- do.call("rbind",                              
-    lapply(files.select[['bst']], function(y) read.spss(y, to.data.frame=TRUE)))))
+    lapply(files.select[['bst']], function(y) read.spss(y, to.data.frame=TRUE, use.value.labels=use.labels)))))
     
     suppressWarnings(suppressMessages(teach.i <-  do.call("rbind",                              
-    lapply(files.select[['btm']], function(y) read.spss(y, to.data.frame=TRUE)[, c(
+    lapply(files.select[['btm']], function(y) read.spss(y, to.data.frame=TRUE, use.value.labels=use.labels)[, c(
     "IDCNTRY", "IDTEALIN", math.teacher)]))))
   
     teacher.data <- merge(teach.l, teach.i, by=c("IDCNTRY", "IDTEALIN"))
@@ -121,10 +120,10 @@ function(folder=getwd(), countries, student=c(), school, math.teacher, science.t
     }
     
     suppressWarnings(suppressMessages(teach.l <- do.call("rbind",                              
-    lapply(files.select[['bst']], function(y) read.spss(y, to.data.frame=TRUE)))))
+    lapply(files.select[['bst']], function(y) read.spss(y, to.data.frame=TRUE, use.value.labels=use.labels)))))
     
     suppressWarnings(suppressMessages(teach.i <-  do.call("rbind",                              
-    lapply(files.select[['bts']], function(y) read.spss(y, to.data.frame=TRUE)[, c(
+    lapply(files.select[['bts']], function(y) read.spss(y, to.data.frame=TRUE, use.value.labels=use.labels)[, c(
     "IDCNTRY", "IDTEALIN", science.teacher)]))))
     
     teacher.data <- merge(teach.l, teach.i, by=c("IDCNTRY", "IDTEALIN"))

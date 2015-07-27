@@ -1,36 +1,42 @@
-plot.intsvy.reg <- function(x, se=TRUE, sort=FALSE, ...) {
-  # it is assumed that last three columns are:  "Freq"       "Mean" "Std.err."  
-  coefE <- lapply(x, function(x) x$Estimate)
-  coefS <- lapply(x, function(x) x$`Std. Error`)
-  inds <- which(!is.na(coefE))
+plot.intsvy.reg <- function(x, vars, se=TRUE, sort=FALSE, ...) {
+  x <- summary(x)
+  x <- x[!is.na(x)]
   
-  estimates <- t(simplify2array(coefE[inds]))
-  colnames(estimates) <- rownames(x[[inds[1]]])
+  if (missing(vars)) {
+    vars = row.names(x[[1]])
+  } else {
+  # Retrieve estimates and standard errors
+  vars <- grep(paste(vars, collapse="|"), rownames(x[[1]]), value=T)
+  }
   
-  sErrors <- t(simplify2array(coefS[inds]))
-  colnames(sErrors) <- rownames(x[[inds[1]]])
+  coefE <- lapply(x, function(x) x[row.names(x) %in% vars, "Estimate"])
+  coefS <- lapply(x, function(x) x[row.names(x) %in% vars, "Std. Error"])
+  estimates <- do.call('rbind', coefE)
+  colnames(estimates) <- row.names(x[[1]][row.names(x[[1]]) %in% vars, ])
+  sErrors <- do.call('rbind', coefS)
+  colnames(sErrors) <- row.names(x[[1]][row.names(x[[1]]) %in% vars, ])
   
+  # Sort argument removed
+  ndf <- droplevels(na.omit(data.frame(reshape::melt.array(estimates), reshape::melt.array(sErrors)[,3])))
+  colnames(ndf) <- c("Group", "Coefficient", "Value", "se")
+  ndf$valueL <- ndf$Value - 1.96*ndf$se
+  ndf$valueH <- ndf$Value + 1.96*ndf$se
+  # To change order of variable labels in facet_wrap (R-squared appears always in the end)
+  ndf$Coefficient <- factor(ndf$Coefficient, levels = vars)
+  
+  # Display plot in alphabetical order
   if (isTRUE(sort)) {
-    ord <- order(estimates[,ncol(estimates)])
-    estimates <- estimates[ord,]
-    sErrors <- sErrors[ord,]
+  ndf$Group <- factor(ndf$Group, levels=sort(levels(ndf$Group), decreasing=T))
   }
   
-  ndf <- data.frame(melt(estimates), melt(sErrors)[,3])
-  colnames(ndf) <- c("group", "coefficient", "value", "se")
-  ndf$valueL <- ndf$value - ndf$se
-  ndf$valueH <- ndf$value + ndf$se
-  
-  pl <- ggplot(data=ndf, aes_string(x = "value", y="group", shape= "coefficient", color="coefficient")) + 
-    geom_point(size=5) + 
-    theme_bw() + 
-    facet_wrap(~coefficient,  scales="free_x") + 
-    theme(legend.position="top") 
-    
+  # Plot
+  pl <- ggplot(data=ndf, aes_string(x = "Value", y="Group", shape= "Coefficient", color="Coefficient")) +
+    geom_point(size=5) +
+    theme_bw() +
+    facet_wrap(~Coefficient, scales="free_x") +
+    theme(legend.position="top")
   if (se) {
-    pl <- pl + geom_errorbarh(aes_string(xmin="valueL", xmax="valueH"), width=.5) 
+    pl <- pl + geom_errorbarh(aes_string(xmin="valueL", xmax="valueH"), width=.5)
   }
-  
   pl
 }
-

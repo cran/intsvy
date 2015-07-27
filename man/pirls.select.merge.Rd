@@ -4,17 +4,21 @@
 Select and merge data
 }
 \description{
-pirls.select.merge selects and merges data from PIRLS. Achievement and weight variabels (all of them) are selected by default.
+pirls.select.merge selects and merges data from PIRLS. Achievement and weight 
+variabels (all of them) are selected by default.
 }
 \usage{
-pirls.select.merge(folder = getwd(), countries, student = c(), home, school, teacher)
+pirls.select.merge(folder = getwd(), countries, student = c(), home, school, 
+teacher, use.labels=TRUE)
 }
 \arguments{
   \item{folder}{
-Directory path where the data are located. The data could be organized within folders but it should not be duplicated.
+Directory path where the data are located. The data could be organized within folders 
+but it should not be duplicated.
 }
   \item{countries}{
-The selected countries, supplied with the abbreviation (e.g., countries=c("AUT", "BGR") or codes (countries=c(40, 100)). If no countries are selected, all are selected.
+The selected countries, supplied with the abbreviation (e.g., countries=c("AUT", "BGR") 
+or codes (countries=c(40, 100)). If no countries are selected, all are selected.
 }
   \item{student}{
 The data labels for the selected student variables. 
@@ -27,6 +31,9 @@ The data labels for the selected school variables.
 }
   \item{teacher}{
 The data labels for the selected teacher data.
+}
+  \item{use.labels}{
+logical: convert variables with value labels into R factors with those levels? 
 }
 }
 
