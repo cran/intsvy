@@ -3,26 +3,19 @@
 \title{PISA percentiles}
 \description{Calculates percentiles for plausible values}
 \usage{
-  pisa.per.pv(pvlabel="READ", per = c(5, 10, 25, 75, 90, 95), by, weight="W_FSTUWT", 
-  brr_weight="W_FSTR", data, export=FALSE, name= "output", folder=getwd())
-}
+  pisa.per.pv(pvlabel="READ", by, per, data, export=FALSE, name= "output", 
+  folder=getwd())}
 \arguments{
   \item{pvlabel}{
-    The label corresponding to the achievement variable, for example, "READ", for overall 
+    The label corresponding to the achievement variable, for example, "READ", for overall
     reading performance.
   }
-  \item{per}{
-    User-defined percentiles (e.g., per = c(5, 10, 25, 75, 90, 95)).
+    \item{per}{
+  User-defined percentiles (e.g., per = c(5, 10, 25, 75, 90, 95)).
   }
   \item{by}{
     The label of the categorical grouping variable (e.g., by="IDCNTRYL") or variables (e.g., 
     by=c("IDCNTRYL", "ST79Q03")).   
-  }
-  \item{weight}{
-    The label of the total weight, "W_FSTUWT", in PISA. 	
-  }
-  \item{brr_weight}{
-    The label of the brr weight prefix, "W_FSTR", PISA.   
   }
   \item{data}{
     An R object, normally a data frame, containing the data from PISA.
@@ -40,7 +33,7 @@
 }
 
 \value{
-  pisa.per.pv returns a data frame with percentiles and associated standard errors.
+  pisa.per.pv returns a data frame with percentiles and associated standard errors. Default weights (e.g. "TOTWGT" in TIMSS) and percentiles are specified in the config parameter.    
 }
 
 \seealso{
@@ -49,6 +42,6 @@
 \examples{
   \dontrun{
     # Table I.2.3d, p. 309 International Report 2012 Volume I
-    pisa.per.pv(pvlabel="MATH", by="IDCNTRYL", data=pisa)
+    pisa.per.pv(pvlabel="MATH", per=c(10, 25, 75, 90), by="IDCNTRYL", data=pisa)
   }
 }

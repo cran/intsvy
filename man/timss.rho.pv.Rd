@@ -6,7 +6,7 @@
 timss.rho.pv calculates the correlation and standard error among two achievement variables each based on 5 plausible values or one achievement variable and an observed variable (i.e., with observed scores rather than plausible values).
 }
 \usage{
-timss.rho.pv(variable, pvlabels, by, weight = "TOTWGT", 
+timss.rho.pv(variable, pvlabels, by,  
 data, export = FALSE, name = "output", folder = getwd())
 }
 
@@ -19,9 +19,6 @@ One or two labels describing the achievement variables.
 }
    \item{by}{
 The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
-}
-  \item{weight}{
-The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{data}{
 An R object, normally a data frame, containing the data from TIMSS.

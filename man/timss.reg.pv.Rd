@@ -5,7 +5,7 @@
 timss.reg.pv performs linear regression analysis (OLS) with plausible values and replicate weights.
 }
 \usage{
-timss.reg.pv(x, pvlabel = "BSMMAT", weight = "TOTWGT", by, 
+timss.reg.pv(x, pvlabel = "BSMMAT", by, 
 data, std=FALSE, export = FALSE, name = "output", folder = getwd())
 }
 
@@ -15,9 +15,6 @@ Data labels of independent variables.
 }
   \item{pvlabel}{
 The label corresponding to the achievement variable, for example, "BSMMAT", for overall math performance in Grade 8.
-}
-  \item{weight}{
-The total weight, "TOTWGT" in the TIMSS dataset.
 }
   \item{by}{
 The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	

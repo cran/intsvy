@@ -4,21 +4,16 @@
 \description{Calculates percentage of students at each proficiency level defined by PISA. Or at proficiency levels provided by the useR.
 }
 \usage{
-pisa.ben.pv(pvlabel, cutoff = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30), 
-by, weight="W_FSTUWT", data, export=FALSE, name= "output", folder=getwd())
+pisa.ben.pv(pvlabel, by, cutoff, data, export=FALSE, name= "output", folder=getwd())
 }
 \arguments{
   \item{pvlabel}{
 The label corresponding to the achievement variable, for example, "READ", for overall reading performance.
 }
   \item{cutoff}{
-The cut-off points for calculating the percentage of students. The default are the proficiency levels in PISA
-}
+The cut-off points for the assessment benchmarks (e.g., cutoff= c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30)). }
   \item{by}{
 The label for the grouping variable, usually the countries (i.e., by="IDCNTRYL"), but could be any other categorical variable. 	
-}
-  \item{weight}{
-The label for total weight, "W_FSTUWT", in PISA. 	
 }
   \item{data}{
 An R object, normally a data frame, containing the data from PISA.
@@ -36,6 +31,9 @@ The folder where the exported file is located.
 
 \value{
 pisa.ben.pv returns a data frame with the percentage of students at each proficiency level and its corresponding standard error.
+
+The total weight, "TOTWGT" and the cut-off points or benchmarks are defined in the config object.
+
 }
 
 \seealso{

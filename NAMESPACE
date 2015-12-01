@@ -1,18 +1,32 @@
 import(ggplot2)
-importFrom(memisc, percent, spss.system.file, description, measurement)
-importFrom(reshape, melt)
-importFrom(foreign, read.spss)
-importFrom(plyr, ddply)
-importFrom(Hmisc, wtd.quantile)
-
+importFrom("memisc", "percent", "spss.system.file", "description", "measurement")
+importFrom("reshape", "melt")
+importFrom("foreign", "read.spss")
+importFrom("plyr", "ddply")
+importFrom("Hmisc", "wtd.quantile")
 importFrom("stats", "as.formula", "cov.wt", "glm", "lm", "na.omit",
              "quasibinomial", "reorder", "sd", "var", "weighted.mean")
-importFrom("utils", "capture.output", "write.csv") 
-
+importFrom("utils", "capture.output", "write.csv")
+  
 export(
 plot.intsvy.mean,
 plot.intsvy.table,
 plot.intsvy.reg,
+
+intsvy.var.label,
+intsvy.select.merge,
+intsvy.table,
+intsvy.mean,
+intsvy.mean.pv,
+intsvy.rho,
+intsvy.rho.pv,
+intsvy.reg,
+intsvy.reg.pv,
+intsvy.log,
+intsvy.log.pv,
+intsvy.ben.pv,
+intsvy.per.pv,
+intsvy.config,
 
 pirls.ben.pv,
 pirls.log,
@@ -43,6 +57,7 @@ pisa.mean,
 pisa.per.pv,
 pisa.reg.pv,
 pisa.reg,
+pisa.rho,
 pisa.select.merge,
 pisa.table,
 pisa.var.label,

@@ -5,19 +5,19 @@
 pirls.log.pv performs logistic regression with plausible values and replicate weights.
 }
 \usage{
-pirls.log.pv(pvlabel="ASRREA", cutoff= 550, x, by, weight="TOTWGT", 
+pirls.log.pv(pvlabel="ASRREA", x, cutoff, by, 
            data, export=FALSE, name= "output", folder=getwd())
 }
 
 \arguments{
-  \item{x}{
-Data labels of independent variables.
-}
   \item{pvlabel}{
 The label corresponding to the achievement variable, for example, "ASRREA", for overall reading performance.
 }
+  \item{x}{
+Data labels of independent variables.
+}
   \item{cutoff}{
-The cut-off point at which the dependent plausible values scores are dichotomised (1 is larger than the cut-off).
+The cut-off point at which the dependent plausible values scores are dichotomised (1 is larger than the cut-off)
 }
   \item{by}{
 The label for the categorical grouping variable (i.e., by="IDCNTRYL") or variables (e.g., x= c("IDCNTRYL", "ITSEX")).   
@@ -34,10 +34,6 @@ The name of the exported file.
   \item{folder}{
 The folder where the exported file is located.
 }
-
- \item{weight}{
-    The label of the total weight, "TOTWGT", in PIRLS. The variable is treated as frequency weights.   
- }
 }
 
 \value{
@@ -47,3 +43,10 @@ pirls.log.pv returns a data frame with coefficients, standard errors, t-values, 
 \seealso{
 pisa.log.pv, timss.log.pv
 }
+
+\examples{
+\dontrun{
+timss.log.pv(pvlabel="BSMMAT", cutoff= 550, x=c("ITSEX", "BSBGSLM"), by="IDCNTRYL", data=timss8g)
+intsvy.log.pv(pvlabel="BSMMAT", cutoff= 550, x="ITSEX", by="IDCNTRYL", 
+data=timss8g, config=timss8_conf)
+}}
