@@ -1,4 +1,5 @@
 import(ggplot2)
+importFrom("stats", "complete.cases")
 importFrom("memisc", "percent", "spss.system.file", "description", "measurement")
 importFrom("reshape", "melt")
 importFrom("foreign", "read.spss")
@@ -61,6 +62,17 @@ pisa.rho,
 pisa.select.merge,
 pisa.table,
 pisa.var.label,
+
+pisa2015.table,
+pisa2015.mean,
+pisa2015.reg,
+pisa2015.rho,
+pisa2015.log,
+pisa2015.mean.pv,
+pisa2015.reg.pv,
+pisa2015.log.pv,
+pisa2015.per.pv,
+pisa2015.ben.pv,
 
 timss.ben.pv,
 timss.log,

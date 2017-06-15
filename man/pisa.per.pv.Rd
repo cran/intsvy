@@ -1,10 +1,16 @@
 \name{pisa.per.pv}
 \alias{pisa.per.pv}
+\alias{pisa2015.per.pv}
 \title{PISA percentiles}
-\description{Calculates percentiles for plausible values}
+\description{Calculates percentiles for plausible values.
+Use the pisa2015.per.pv() for data from PISA 2015 study.
+}
 \usage{
   pisa.per.pv(pvlabel="READ", by, per, data, export=FALSE, name= "output", 
-  folder=getwd())}
+  folder=getwd())
+  pisa2015.per.pv(pvlabel="READ", by, per, data, export=FALSE, name= "output", 
+  folder=getwd())
+  }
 \arguments{
   \item{pvlabel}{
     The label corresponding to the achievement variable, for example, "READ", for overall
@@ -43,5 +49,7 @@
   \dontrun{
     # Table I.2.3d, p. 309 International Report 2012 Volume I
     pisa.per.pv(pvlabel="MATH", per=c(10, 25, 75, 90), by="IDCNTRYL", data=pisa)
+    # PISA 2015
+    pisa2015.per.pv(pvlabel="MATH", per=c(10, 25, 75, 90), by="CNT", data=stud2015)
   }
 }
