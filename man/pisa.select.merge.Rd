@@ -8,7 +8,7 @@ pisa.select.merge selects and merges data from PISA. Achievement and weight vari
 }
 \usage{
 pisa.select.merge(folder=getwd(), student.file, parent.file=c(), school.file=c(), 
-countries, student=c(), parent, school, use.value.labels=FALSE)
+countries, student=c(), parent, school)
 }
 \arguments{
   \item{folder}{
@@ -34,9 +34,6 @@ The data labels for the selected parental variables.
 }
   \item{school}{
 The data labels for the selected school variables.
-}
-  \item{use.value.labels}{
-logical, if FALSE value labels not immported but more efficient.
 }
 }
 
