@@ -11,7 +11,7 @@ function(folder=getwd(), name="Variable labels", output=getwd(),
   
     # Looks for files (student, home, school, teacher), not student-teacher linkage
     files.all <- lapply(config$input$prefixes, function(x) list.files(folder, 
-                   full.names= TRUE, pattern=paste0("^", x, ".*.sav$"), 
+                   full.names= TRUE, pattern=paste0("^", x,"|", toupper(x), ".*.sav$"), 
                    recursive=TRUE))
     
     if (all(sapply(files.all, length)==0)){
@@ -21,13 +21,18 @@ function(folder=getwd(), name="Variable labels", output=getwd(),
     # Remove empty elements in list
     files.all <- files.all[lapply(files.all, length)>0]
     
-    
     # Files char found in the datasets
-    abv <- unique(unlist(lapply(files.all, function(x) 
-      substr(x, nchar(x) + config$input$type_part[1], nchar(x) + config$input$type_part[2])))) 
+    myabv <- lapply(files.all, function(x)  
+      substr(x, nchar(x) + config$input$type_part[1], nchar(x) + config$input$type_part[2]))
+    
+    # include only file names with expected abvs (remove test, for example)
+    files.all <- lapply(seq_along(files.all), function(y) files.all[[y]][myabv[[y]] 
+                  %in% toupper(config$input$prefixes)])
+    
+    abv <- unique(unlist(lapply(myabv, function(x) x[x  %in% toupper(config$input$prefixes)])))
     
     # Name list for existing datasets, will print student-teacher linkage if available
-    names(files.all) <- file.names[match(abv, file.names[["Abv"]]), "Instrument"]
+    names(files.all) <- file.names[match(toupper(abv), toupper(file.names[["Abv"]])), "Instrument"]
     
     # Remove null elements (e.g. no teacher datasets)
     #files.all <- files.all[!is.na(names(files.all))]
