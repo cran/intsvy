@@ -1,5 +1,5 @@
-7b5c6ce2d17f558024d4ffad944a13d3 *DESCRIPTION
-069d07d0c251a82646701eda181a933a *NAMESPACE
+90767e053adcc3098edb09e0ced34721 *DESCRIPTION
+ae2e65db2a6d1cd8150c3618626716d5 *NAMESPACE
 e1d0ba86b4cfc2e35a40973dab2c9fc7 *R/adj.input.R
 86deb97a547cafec6f99ceade6d38398 *R/adj.measlev.R
 542c6075e1dae11795d790b50e66b6bc *R/intsvy.ben.pv.R
@@ -13,9 +13,9 @@ ff641a908bf6697516bf3d0993a3d0a7 *R/intsvy.reg.R
 fc090c13e0e36cb9bdfe2741b2910ada *R/intsvy.reg.pv.R
 5a6c4539cf23243f31e8fc8869965c87 *R/intsvy.rho.R
 22781be47eabd8c8adc9a9d30221bff4 *R/intsvy.rho.pv.R
-12a7e5eeaeff97836731ce68122aa221 *R/intsvy.select.merge.R
+ca5851d46ad4e6cdce23adf2946dba65 *R/intsvy.select.merge.R
 7904a5921675133f871e8d2d236e898c *R/intsvy.table.R
-9dae53bb59fdb9d8f6f1afb0c4928c19 *R/intsvy.var.label.R
+d3d72663faf424a8cdcbae539d533296 *R/intsvy.var.label.R
 314d281c56b9961b5c51bcdf02cb8bb3 *R/is.vlabeled.R
 aa901b7a3ac4f04470baeff1e2dd154c *R/my.methods.R
 e2e0032faa20c9cb0239705365035ca4 *R/piaac.ben.pv.R
@@ -35,7 +35,7 @@ f81610eb1f90b504dbddb31985e39678 *R/pirls.reg.pv.R
 d34107b82ceefb18783b5db8c785124a *R/pirls.rho.R
 8f76c11c1ad654469634b0a209d29a45 *R/pirls.rho.pv.R
 ce9946d6b53e967c01509785181d8fbc *R/pirls.select.merge.R
-debfdc9cdc62e696881a8317e602a8a2 *R/pirls.table.R
+94ec2d0cef31569c41b0e5d7b1dacfa2 *R/pirls.table.R
 1900636a2dab8adc7642da8af221072f *R/pirls.var.label.R
 d7fab830c18d1d699aa9afa749d7a00c *R/pisa.ben.pv.R
 aa1e65e7efc446c247bae2a2e3c0f5d1 *R/pisa.log.R
@@ -75,7 +75,7 @@ ccd62a2fb95ac3bd482b4e0bb2576fd7 *data/confs.rda
 89b81c45e5621da4e95ddfa4954783d3 *man/adj.input.Rd
 f5f42fd6fa35b9ee3080007be3d4e576 *man/adj.measlev.Rd
 284b2b3d90c4968fbf482366b7b6f1df *man/confs.Rd
-4a4b821134d1155ebe1e0e19b6d01faa *man/intsvy-package.Rd
+cfeb3749741bf20886771a30df27ee34 *man/intsvy-package.Rd
 58b36708f4df00a2839adcaf217376f5 *man/intsvy.ben.pv.Rd
 7cc7d05f76b1401f43b9e1435c673a0d *man/intsvy.config.Rd
 41744789f8c3477499baa35b65c24e8b *man/intsvy.log.Rd
@@ -108,7 +108,7 @@ b4bb3207e3d494c0b1168ce467bd7b84 *man/pirls.reg.Rd
 8777e4955019cf0a8a6051ac40424145 *man/pirls.rho.Rd
 dffa8fd09fa6fe7c26a16530f9e7ade6 *man/pirls.rho.pv.Rd
 7b5fe0878baf559498203745d1a604ea *man/pirls.select.merge.Rd
-e575e00096228be4bb0c64d7eac189e7 *man/pirls.table.Rd
+07c3ff13bbd7b300bf8263aafa5f4fbf *man/pirls.table.Rd
 fdf0b89e5b3bf0f088cc491218d751d8 *man/pirls.var.label.Rd
 99cca82fa20549eaf9d8d014118afeec *man/pisa.ben.pv.Rd
 3fd46878027b8df7bf94e00a5a6c1b6d *man/pisa.log.Rd
