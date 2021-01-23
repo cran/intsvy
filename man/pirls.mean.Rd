@@ -1,6 +1,5 @@
 \name{pirls.mean}
 \alias{pirls.mean}
-\alias{pirls2016.mean}
 \title{
 Calculates mean of variable
 }
@@ -42,7 +41,6 @@ timss.mean, pisa.mean
 }
 \examples{
 \dontrun{
-# PIRLS: Exhibit 2.17 User Guide PIRLS 2011, p. 28
 pirls.mean(variable='ASBHELA', by= 'IDCNTRYL', data=pirls)
 }
 }

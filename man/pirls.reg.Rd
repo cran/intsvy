@@ -1,6 +1,5 @@
 \name{pirls.reg}
 \alias{pirls.reg}
-\alias{pirls2016.reg}
 \title{Regression analysis}
 \description{pirls.reg performs linear regression analysis (OLS) for an observed depedent variable (NOT for plausible values)
 }
@@ -41,8 +40,6 @@ timss.reg
 }
 \examples{
 \dontrun{
-
-# Exhibit 3.13 in User Guide 2006, p. 68
 
 # Recode ASBGBOOK
 table(as.numeric(pirls$ASBGBOOK), pirls$ASBGBOOK)

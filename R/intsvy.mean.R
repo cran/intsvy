@@ -7,14 +7,16 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd(), confi
       # Replicate weighted %s (sampling error)
       # in PISA / PIAAC
       
+      weights <- grep("^W_.*[0-9]+$", names(data), value = TRUE)
+      
       meanrp <- sapply(1:config$parameters$BRRreps, function(i) 
                       weighted.mean(as.numeric(data[[variable]]), 
-                               data[[paste(config$variables$weightBRR, i , sep="")]], na.rm = TRUE))
+                               data[[weights[i]]], na.rm = TRUE))
       
       # Replicate weights for SDs (sampling error)
       sdrp <- sapply(1:config$parameters$BRRreps, function(i)  
-                      (sum(data[[paste0(config$variables$weightBRR, i)]]*(data[[variable]]-meanrp[i])^2, na.rm = TRUE)/
-                               sum(data[[paste0(config$variables$weightBRR, i)]], na.rm = TRUE))^(1/2))
+                      (sum(data[[weights[i]]]*(data[[variable]]-meanrp[i])^2, na.rm = TRUE)/
+                               sum(data[[weights[i]]], na.rm = TRUE))^(1/2))
       
       # Total weighted mean                                                                      
       meantot <- weighted.mean(as.numeric(data[[variable]]), data[[config$variables$weightFinal]], na.rm = TRUE)
@@ -27,7 +29,7 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd(), confi
       sdse <- (0.05*sum((sdrp-sdtot)^2))^(1/2)
       
       result <- data.frame("Freq"=sum(!is.na(data[[variable]])), "Mean"= meantot, "s.e."= meanse, "SD" = sdtot, "s.e" = sdse)
-      return(round(result, 2))
+      return(result)
       
     } 
     if (config$parameters$weights == "JK") {
@@ -69,7 +71,7 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd(), confi
         # Standard error (sampling eror) 
         meanse <- (sum((meanrp-meantot)^2)/2)^(1/2)
         result <- data.frame("Freq"=sum(!is.na(data[[variable]])), "Mean"= meantot, "s.e."= meanse)
-        return(round(result, 2))
+        return(result)
         
     }
     }
@@ -91,7 +93,7 @@ function(variable, by, data, export=FALSE, name= "output", folder=getwd(), confi
       
       meanse <- (cc*sum((meanrp-meantot)^2))^(1/2)
       result <- data.frame("Freq"=sum(!is.na(data[[variable]])), "Mean"= meantot, "s.e."= meanse)
-      return(round(result, 2))
+      return(result)
 
     } 
   }

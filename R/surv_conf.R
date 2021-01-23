@@ -6,23 +6,9 @@
 pisa_conf <- list(variables = list(pvlabelpref = "PV",
                                    pvlabelsuff = "READ",
                                    weightFinal = "W_FSTUWT",
-                                   weightBRR = "W_FSTR"),
+                                   weightBRR = "W_"),
                   parameters = list(cutoffs = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
                                     percentiles = c(5, 10, 25, 75, 90, 95),
-                                    PVreps = 5,
-                                    BRRreps = 80,
-                                    weights = "BRR",
-                                    replication_scheme = 'pisa')
-)
-
-# For PISA_2015
-pisa2015_conf <- list(variables = list(pvlabelpref = "PV",
-                                   pvlabelsuff = "READ",
-                                   weightFinal = "W_FSTUWT",
-                                   weightBRR = "W_FSTURWT"),
-                  parameters = list(cutoffs = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
-                                    percentiles = c(5, 10, 25, 75, 90, 95),
-                                    PVreps = 10,
                                     BRRreps = 80,
                                     weights = "BRR",
                                     replication_scheme = 'pisa')
@@ -47,6 +33,22 @@ piaac_conf <- list(variables = list(pvlabelpref = "PV",
                               cnt_part = c(-8, -6))
 )
 
+
+# For PASEC
+pasec_conf <- list(variables = list(pvlabelpref = "PV",
+                                   pvlabelsuff = "LECT",
+                                   weight = "rwgt0",
+                                   jackknifeZone = "JKZONE",
+                                   jackknifeRep = "JKREP"),
+                  parameters = list(cutoffs = c(126, 399.1, 469.5, 540, 610.4),
+                                    percentiles = c(5, 10, 25, 75, 90, 95),
+                                    weights = "JK",
+                                    replication_scheme = 'pasec',
+                                    varpv1=FALSE)
+)
+
+
+
 # For TIMSS
 timss4_conf <- list(variables = list(pvlabelpref="BSMMAT", 
                                     pvlabelsuff = "",
@@ -57,7 +59,7 @@ timss4_conf <- list(variables = list(pvlabelpref="BSMMAT",
                                      percentiles = c(5, 10, 25, 75, 90, 95),
                                      weights = "JK",
                                      PVreps = 5,
-                                     varpv1=TRUE),
+                                     varpv1=FALSE),
                    input = list(type = "IEA",
                                 prefixes = c("asg", "ash", "acg", "ast", "atg"),
                                 student = "asg",
@@ -86,7 +88,7 @@ timss8_conf <- list(variables = list(pvlabelpref="BSMMAT",
                                       percentiles = c(5, 10, 25, 75, 90, 95),
                                       weights = "JK",
                                       PVreps = 5, 
-                                      varpv1=TRUE),
+                                      varpv1=FALSE), # change to TRUE for timss < 2015
                     input = list(type = "IEA",
                                  prefixes = c("bsg", "bcg", "bst", "btm", "bts"),
                                  student = "bsg",
@@ -104,34 +106,6 @@ timss8_conf <- list(variables = list(pvlabelpref="BSMMAT",
 )
 
 
-timss2015_conf <- list(variables = list(pvlabelpref="BSMMAT", 
-                                          pvlabelsuff = "",
-                                          weight="TOTWGT",
-                                          jackknifeZone = "JKZONE",
-                                          jackknifeRep = "JKREP"),
-                         parameters = list(cutoffs = c(400, 475, 550, 625),
-                                           percentiles = c(5, 10, 25, 75, 90, 95),
-                                           weights = "JK",
-                                           PVreps = 5,
-                                           varpv1=FALSE),
-                         input = list(type = "IEA",
-                                      prefixes = c("asg", "ash", "acg", "ast", "atg"),
-                                      student = "asg",
-                                      student_colnames1 = c("IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD"),
-                                      student_colnames2 = c("JKREP","JKZONE", "HOUWGT", "SENWGT", "TOTWGT"),
-                                      student_pattern = "^AS.*0[0-5]$", 
-                                      home = "ash",
-                                      home_colnames = c("IDCNTRY", "IDSTUD"),
-                                      school = "acg",
-                                      school_colnames = c("IDCNTRY", "IDSCHOOL", "SCHWGT"),
-                                      teacher = c("ast","atg"),
-                                      teacher_colnames = c("IDCNTRY", "IDTEALIN"),
-                                      student_ids = c("IDCNTRY", "IDSTUD"),
-                                      school_ids = c("IDCNTRY", "IDSCHOOL"),
-                                      type_part = c(-11, -9),
-                                      cnt_part = c(-8, -6))
-)
-
 
 # For PIRLS
 pirls_conf <- list(variables = list(pvlabelpref = "ASRREA0",
@@ -142,8 +116,7 @@ pirls_conf <- list(variables = list(pvlabelpref = "ASRREA0",
                  parameters = list(cutoffs = c(400, 475, 550, 625),
                                    percentiles = c(5, 10, 25, 75, 90, 95),
                                    weights = "JK",
-                                   PVreps = 5,
-                                   varpv1=TRUE),
+                                   varpv1=FALSE), # change to TRUE for PIRLS < 2016 (use only 1 PV for sampling error)
                  input = list(type = "IEA",
                               prefixes = c("asg", "ash", "ast", "acg", "atg"),
                               student = "asg",
@@ -160,34 +133,6 @@ pirls_conf <- list(variables = list(pvlabelpref = "ASRREA0",
                               school_ids = c("IDCNTRY", "IDSCHOOL"),
                               type_part = c(-11, -9),
                               cnt_part = c(-8, -6))
-)
-
-pirls2016_conf <- list(variables = list(pvlabelpref = "ASRREA0",
-                                    pvlabelsuff = "",
-                                    weight="TOTWGT",
-                                    jackknifeZone = "JKZONE",
-                                    jackknifeRep = "JKREP"),
-                   parameters = list(cutoffs = c(400, 475, 550, 625),
-                                     percentiles = c(5, 10, 25, 75, 90, 95),
-                                     weights = "JK",
-                                     PVreps = 5,
-                                     varpv1=FALSE),
-                   input = list(type = "IEA",
-                                prefixes = c("asg", "ash", "ast", "acg", "atg"),
-                                student = "asg",
-                                student_colnames1 = c("IDCNTRY", "IDSCHOOL", "IDCLASS", "IDSTUD"),
-                                student_colnames2 = c("JKREP","JKZONE", "HOUWGT", "SENWGT", "TOTWGT"),
-                                student_pattern = "^ASR.*0[0-5]$", 
-                                home = "ash",
-                                home_colnames = c("IDCNTRY", "IDSTUD"),
-                                school = "acg",
-                                school_colnames = c("IDCNTRY", "IDSCHOOL", "SCHWGT"),
-                                teacher = c("ast","atg"),
-                                teacher_colnames = c("IDCNTRY", "IDTEALIN"),
-                                student_ids = c("IDCNTRY", "IDSTUD"),
-                                school_ids = c("IDCNTRY", "IDSCHOOL"),
-                                type_part = c(-11, -9),
-                                cnt_part = c(-8, -6))
 )
 
 # ICILS

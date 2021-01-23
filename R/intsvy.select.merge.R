@@ -59,13 +59,22 @@ function(folder=getwd(), countries, student=c(), home, school, teacher, config) 
   }
   
   # Selected files for selected countries (1st/last time countries argument used)
-  files.select <- lapply(files.all, function(y) sapply(countries, function(x) y[toupper(substr(y, 
-  nchar(y)+config$input$cnt_part[1], nchar(y)+config$input$cnt_part[2]))==x])) 
+  files.select <- lapply(files.all, function(y) lapply(countries, function(x) 
+  y[toupper(substr(y, nchar(y)+config$input$cnt_part[1], nchar(y)+config$input$cnt_part[2]))==x]))
+  
   # no blanks, no home instrument, otherwise delete, see 4g function
 
-  # Filter directories which have length 0
-  files.select <- lapply(files.select, function(x) Filter(function(var) length(var) != 0, x))
+  # Remove "bridge" data, always first position in list
+  files.select <-   lapply(files.select, function(x) lapply(x, 
+                    function(y) ifelse(length(y)>1, y[length(y)], y)))
+
+  files.select <- lapply(files.select, unlist)
   
+  
+  # Filter directories which have length 0 and NA
+  files.select <- lapply(files.select, function(x) Filter(function(var) length(var) != 0, x))
+  files.select <- lapply(files.select, function(x) x[!is.na(x)])
+
   # Remove cases for no home instruments
   # only if home is specified
   if (!missing(home)) {
@@ -91,7 +100,7 @@ function(folder=getwd(), countries, student=c(), home, school, teacher, config) 
     suppressWarnings(suppressMessages(junk0 <- lapply(files.select[[config$input$student]], function(y) 
       read.spss(y, to.data.frame=TRUE, use.value.labels=FALSE))))
     
-    student.data <- do.call('rbind', lapply(junk0, function(x) x[, unique(c(config$input$student_colnames1,
+    student.data <- do.call(dplyr::bind_rows, lapply(junk0, function(x) x[, unique(c(config$input$student_colnames1,
       grep(config$input$student_pattern, names(x), value=TRUE), student, config$input$student_colnames2))]))
   }
   
@@ -101,7 +110,7 @@ function(folder=getwd(), countries, student=c(), home, school, teacher, config) 
       stop('cannot locate home background data files')
     }
     
-    suppressWarnings(suppressMessages(home.data <- do.call("rbind",                          # Merge [[2]] home
+    suppressWarnings(suppressMessages(home.data <- do.call(dplyr::bind_rows,                          # Merge [[2]] home
               lapply(files.select[[config$input$home]], function(y) 
                 read.spss(y, to.data.frame=TRUE, use.value.labels=FALSE)[, unique(c(           # Each dataset
                   config$input$home_colnames, home))]))))                                     # Selected
@@ -113,7 +122,7 @@ function(folder=getwd(), countries, student=c(), home, school, teacher, config) 
       stop('cannot locate school data files')
     }
 
-    suppressWarnings(suppressMessages(school.data <- do.call("rbind",                      # Merge [[2]] school
+    suppressWarnings(suppressMessages(school.data <- do.call(dplyr::bind_rows,                      # Merge [[2]] school
            lapply(files.select[[config$input$school]], function(y) 
              read.spss(y, to.data.frame=TRUE, use.value.labels = FALSE)[unique(c(config$input$school_colnames, school))]))))    # Selected
 }

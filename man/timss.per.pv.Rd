@@ -1,6 +1,5 @@
 \name{timss.per.pv}
 \alias{timss.per.pv}
-\alias{timss2015.per.pv}
 \title{TIMSS percentiles}
 \description{Calculates percentiles for plausible values}
 \usage{
@@ -40,7 +39,6 @@
 }
 \examples{
   \dontrun{
-    # Appendix G.2, p. 484, TIMSS 2011 International Results in Mathematics
-    timss.per.pv(pvlabel="BSMMAT", per = c(5, 10, 25, 50, 75, 90, 95), by="IDCNTRYL", data=timssg8)
+timss.per.pv(pvlabel="BSMMAT", per = c(5, 10, 25, 50, 75, 90, 95), by="IDCNTRYL", data=timssg8)
   }
 }

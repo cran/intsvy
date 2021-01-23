@@ -6,14 +6,14 @@
 pirls.rho.pv calculates the correlation and standard error among two achievement variables each based on 5 plausible values or one achievement variable and an observed variable (i.e., with observed scores rather than plausible values).
 }
 \usage{
-pirls.rho.pv(variable, pvlabels, by, 
+pirls.rho.pv(variable, pvlabel, by, 
 data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
   \item{variable}{
 A data label for the observed variable (e.g., variable="ASDAGE") 
 }
-  \item{pvlabels}{
+  \item{pvlabel}{
 One or two labels describing the achievement variables (e.g., pvlabels = c("ASRLIT", "ASRINF") )
 }
   \item{by}{
@@ -42,7 +42,6 @@ timss.rho.pv, pirls.rho, timss.rho
 }
 \examples{
 \dontrun{
-# Exhibit A.15 p.309 in International report 2006
 pirls.rho.pv(pvlabels=c("ASRLIT", "ASRINF"), by="IDCNTRYL", data=pirls)
 }
 }

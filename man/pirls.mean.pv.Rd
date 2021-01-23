@@ -1,6 +1,5 @@
 \name{pirls.mean.pv}
 \alias{pirls.mean.pv}
-\alias{pirls2016.mean.pv}
 \title{Calculates mean achievement score
 }
 \description{
@@ -8,8 +7,6 @@ pirls.mean.pv uses five plausible values to calculate the mean achievement score
 }
 \usage{
 pirls.mean.pv(pvlabel = "ASRREA", by,  
-data, export = FALSE, name = "output", folder = getwd())
-pirls2016.mean.pv(pvlabel = "ASRREA", by,  
 data, export = FALSE, name = "output", folder = getwd())
 }
 \arguments{
@@ -43,9 +40,7 @@ timss.mean.pv, pisa.mean.pv
 }
 \examples{
 \dontrun{
-# PIRLS: Exhibit 2.5 User Guide PIRLS 2011, p. 15
 pirls.mean.pv(pvlabel="ASRREA", by= "IDCNTRYL", data=pirls)
-# PIRLS: Exhibit 2.8 User Guide PIRLS 2011, p. 18
 pirls.mean.pv(pvlabel="ASRREA", by= c("IDCNTRYL", "ITSEX"), data=pirls)
 }
 }

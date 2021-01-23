@@ -11,18 +11,23 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
       # balanced repeated replication
       # Replicate weighted %s (sampling error)
       # in PISA / PIAAC
+      pvnames <- paste0(pvnames, ".*PV[0-9]|PV[0-9].*", pvnames)
+      pvnames <- grep(pvnames, names(data), value = TRUE)
+      weights <- grep(paste0("^", config$variables$weightBRR , ".*[0-9]+$"), 
+                      names(data), value = TRUE)
+      
       
       # Replicate weighted sds and means of 5 PVs (sampling error)
       R.mean <- sapply(pvnames, function(k) 
         sapply(1:config$parameters$BRRreps, function(i) 
           weighted.mean(data[[k]], 
-                        data[[paste0(config$variables$weightBRR, i)]], na.rm = TRUE)))
+                        data[[weights[i]]], na.rm = TRUE)))
       
       R.sd <- sapply(pvnames, function(x) 
         sapply(1:config$parameters$BRRreps, function(i)
-          (sum(data[[paste0(config$variables$weightBRR, i)]]*
+          (sum(data[[weights[i]]]*
                  (data[[x]]-R.mean[i, x])^2, na.rm = TRUE)/
-             sum(data[[paste0(config$variables$weightBRR, i)]], na.rm = TRUE))^(1/2)))
+             sum(data[[weights[i]]], na.rm = TRUE))^(1/2)))
       
       # Grand mean of 5 PVs (imputation variance)
       PV.mean <- sapply(pvnames, function(x) 
@@ -35,7 +40,7 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
       # Mean of means (the one is reported)
       MEAN.m <- mean(PV.mean)
       SD.m <- mean(PV.sd)
-      
+    
       cc = 1/20
       if (config$parameters$weights == "mixed_piaac") {
         cntName <- as.character(unique(data[,config$variables$countryID]))[1]
@@ -45,6 +50,7 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
           warning(paste("In PIAAC study different replications schemes were applied in different countries. \n In the selected set of countries more than one scheme was used. \n Further estimation is performed with coefficient c =", cc))
         }
       }
+    
       
       # Sampling variance; imputation variance; and SEs
       var.mean.w <- mean(sapply(seq_along(pvnames), function(i) cc*sum((R.mean[,i]-PV.mean[i])^2)))
@@ -57,11 +63,15 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
       
       result <- data.frame("Freq"= length(data[[config$variables$weightFinal]]), "Mean"= mean(MEAN.m), "s.e."= mean.se, 
                            "SD"=mean(SD.m), "s.e"=sd.se)
+      return(round(result, 2))
 
-    } 
+    }
+    
     if (config$parameters$weights == "JK") {
       # jack knife
       # in PIRLS / TIMSS
+      
+      pvnames <- grep(pvnames, names(data), value = TRUE)
 
       # Replicate weights
       R.wt <- sapply(1:max(data[[config$variables$jackknifeZone]]), function(x) 
@@ -92,7 +102,9 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
       v.sdw <- sum((R.sd1 - R.sd[1])^2);  v.sdb <- (1+1/length(pvnames))*var(R.sd)
       mean.se <-  (v.meanw+v.meanb)^(1/2); sd.se <- (v.sdw+v.sdb)^(1/2)
       
-      } else {
+      } 
+      
+      if (isFALSE(config$parameters$varpv1)) {
       
       R.wt2 <- sapply(1:max(data[[config$variables$jackknifeZone]]), function(x) 
           ifelse(data[[config$variables$jackknifeZone]] == x, 
@@ -126,10 +138,8 @@ function(pvnames, by, data, export=FALSE, name= "output", folder=getwd(), config
       result <- data.frame("Freq"= length(data[[config$variables$weight]]), "Mean"= mean(R.mean), "s.e."= mean.se, 
                            "SD"=mean(R.sd), "s.e"=sd.se)
       
+      return(round(result, 2))
     }
-
-    return(round(result, 2))
-    
   }
   
   # If by no supplied, calculate for the complete sample    

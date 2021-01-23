@@ -1,6 +1,5 @@
 \name{pirls.reg.pv}
 \alias{pirls.reg.pv}
-\alias{pirls2016.reg.pv}
 \title{Regression analysis with plausible values}
 \description{
 pirls.reg.pv performs linear regression analysis (OLS) with plausible values and replicate weights.
@@ -46,8 +45,6 @@ timss.reg.pv, pisa.reg.pv
 }
 \examples{
 \dontrun{
-
-# PIRLS: Exhibit 2.11, User Guide PIRLS 2011, p.21
 pirls$SEX[pirls$ITSEX=="BOY"]=1
 pirls$SEX[pirls$ITSEX=="GIRL"]=0
 pirls.reg.pv(pvlabel="ASRREA", by="IDCNTRYL", x="SEX", data=pirls)

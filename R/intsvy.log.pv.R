@@ -1,7 +1,7 @@
 intsvy.log.pv <- 
-  function(pvlabel, x, cutoff, by, data, export=FALSE, name= "output", folder=getwd(), config) {
+  function(pvnames, x, cutoff, by, data, export=FALSE, name= "output", folder=getwd(), config) {
 
-  log.pv.input <- function(pvlabel, x, cutoff, data, config) {
+  log.pv.input <- function(pvnames, x, cutoff, data, config) {
     if (any(sapply(data[x], function(i) all(duplicated(i))))) {
       return(data.frame("Coef."=NA, "Std. Error"=NA, "t value"=NA, "OR"=NA, "CI95low"=NA, 
                         "CI95up"=NA, check.names=F))
@@ -13,11 +13,14 @@ intsvy.log.pv <-
       # Replicate weighted %s (sampling error)
       # in PISA
       
-      pvnames <- paste("PV", 1:config$parameters$PVreps, pvlabel, sep="")
-
+      pvnames <- paste0(pvnames, ".*PV[0-9]|PV[0-9].*", pvnames)
+      pvnames <- grep(pvnames, names(data), value = TRUE)
+      weights <- grep(paste0("^", config$variables$weightBRR , ".*[0-9]+$"), 
+                      names(data), value = TRUE)
+      
       # Dependent binary variable
       di <- as.data.frame(sapply(pvnames, function(pv) ifelse(data[[pv]] > cutoff, 1, 0)))
-      names(di) <- paste("DI", 1:config$parameters$PVreps, sep="")
+      names(di) <- paste("DI", 1:length(pvnames), sep="")
       data <- cbind(data, di)
       
       # List of formulas for each PV
@@ -25,7 +28,7 @@ intsvy.log.pv <-
       # Replicate weighted coefficients for sampling error (5 PVs), normalised weights
       coef.rp <- suppressWarnings(lapply(regform, function(k) lapply(1:config$parameters$BRRreps, function(i) 
         summary(glm(formula=as.formula(k), family=quasibinomial("logit"), 
-                    weights=nrow(data)*data[[paste0(config$variables$weightBRR, i)]]/sum(data[[paste0(config$variables$weightBRR, i)]]),
+                    weights=nrow(data)*data[[weights[i]]]/sum(data[[weights[i]]]),
                     data=data)))))
 
       # Retrieving coefficients
@@ -69,7 +72,8 @@ intsvy.log.pv <-
     if (config$parameters$weights == "JK") {
       # jack knife
       # in PIRLS / TIMSS
-      pvnames <- paste(pvlabel, "0", 1:config$parameters$PVreps, sep="")
+      
+      pvnames <- grep(pvnames, names(data), value = TRUE)
       
       # Dependent binary variable
       di <- as.data.frame(sapply(pvnames, function(pv) ifelse(data[[pv]] > cutoff, 1, 0)))
@@ -141,12 +145,12 @@ intsvy.log.pv <-
         
         # Replicate weighted coefficients for sampling error (PV1 only), normalised weights
         
-        coef.rp1 <- suppressWarnings(lapply(1:config$parameters$PVreps, function(m)
+        coef.rp1 <- suppressWarnings(lapply(1:length(pvnames), function(m)
           lapply(1:ncol(rp.wt), function(rp)  summary(glm(formula=as.formula(regform[[m]]), 
                       family=quasibinomial("logit"), weights=rp.wt.n[, rp], data=data)))))
         
         # Retrieving coefficients
-        rp.coef <- lapply(1:config$parameters$PVreps, function(m) sapply(1:ncol(rp.wt), 
+        rp.coef <- lapply(1:length(pvnames), function(m) sapply(1:ncol(rp.wt), 
         function(rp) coef.rp1[[m]][[rp]]$coefficients[,1]))
         
         # Total weighted coefficient for each PV for imputation (between) error
@@ -160,7 +164,7 @@ intsvy.log.pv <-
         mean.coef <- apply(pv.coef, 1, mean)
         
         # Sampling error (variance within)
-        var.w <- apply(sapply(1:config$parameters$PVreps, function(m) 
+        var.w <- apply(sapply(1:length(pvnames), function(m) 
         apply((rp.coef[[m]] - pv.coef[,1])^2, 1, sum)), 1, mean)
         
         
@@ -194,10 +198,10 @@ intsvy.log.pv <-
   
   # If by no supplied, calculate for the complete sample    
   if (missing(by)) { 
-    output <- log.pv.input(pvlabel=pvlabel, x=x, cutoff=cutoff, data=data, config=config) 
+    output <- log.pv.input(pvnames=pvnames, x=x, cutoff=cutoff, data=data, config=config) 
   } else {
     output <- lapply(split(data, droplevels(data[by])), function(i) 
-      log.pv.input(pvlabel=pvlabel, cutoff=cutoff, x=x, data=i, config=config))
+      log.pv.input(pvnames=pvnames, cutoff=cutoff, x=x, data=i, config=config))
   }
 
   if (export)  {

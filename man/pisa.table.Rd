@@ -1,16 +1,13 @@
 \name{pisa.table}
 \alias{pisa.table}
-\alias{pisa2015.table}
 \title{
 Frequency table
 }
 \description{
 pisa.table produces a frequency table for a categorical variable printing percentages and standard errors.
-Use the pisa2015.table() for data from PISA 2015 study.
 }
 \usage{
 pisa.table(variable, by, data, export = FALSE, name = "output", folder = getwd())
-pisa2015.table(variable, by, data, export = FALSE, name = "output", folder = getwd())
 }
 
 \arguments{
@@ -43,11 +40,7 @@ timss.table, pirls.table
 }
 \examples{
 \dontrun{
-# Table A2.4a, p.274 International Report 2012 Volume I
 pisa.table(variable="ST01Q01", by="IDCNTRYL", data=pisa)
-# Table III.2.1a, p. 232, International Report 2012 Volume III
 pisa.table(variable="ST08Q01", by="IDCNTRYL", data=pisa)
-# PISA 2015
-pisa2015.table(variable="ST004D01T", by="CNT",data=stud2015)
 }
 }

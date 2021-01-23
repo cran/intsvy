@@ -1,6 +1,5 @@
 \name{pirls.table}
 \alias{pirls.table}
-\alias{pirls2016.table}
 \title{
 Frequency table
 }
@@ -42,6 +41,5 @@ timss.table, pisa.table
 }
 \examples{
 \dontrun{
-# PIRLS: Exhibit 2.19 User Guide 2011, p. 30
 pirls.table(variable="ASDHELA", by="IDCNTRYL", data=pirls)
 }}
