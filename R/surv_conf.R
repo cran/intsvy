@@ -14,6 +14,21 @@ pisa_conf <- list(variables = list(pvlabelpref = "PV",
                                     replication_scheme = 'pisa')
 )
 
+
+# For LLECE
+llece_conf <- list(variables = list(pvlabelpref = "vp",
+                                   pvlabelsuff = "READ",
+                                   weightFinal = "wgt_sen",
+                                   weightBRR = "w_fstr"),
+                  parameters = list(cutoffs = c(676, 729, 813),
+                                    percentiles = c(5, 10, 25, 75, 90, 95),
+                                    BRRreps = 100,
+                                    weights = "BRR",
+                                    replication_scheme = 'pisa')
+)
+
+
+
 # For PIAAC
 # http://vs-web-fs-1.oecd.org/piaac/puf-data/SPSS/
 piaac_conf <- list(variables = list(pvlabelpref = "PV",
@@ -45,6 +60,19 @@ pasec_conf <- list(variables = list(pvlabelpref = "PV",
                                     weights = "JK",
                                     replication_scheme = 'pasec',
                                     varpv1=FALSE)
+)
+
+
+# For SEA-PLM
+
+sea_conf <- list(variables = list(pvlabelpref = "PV",
+                                    pvlabelsuff = "PV",
+                                    weight = "WT2019",
+                                    weightJK = "rwgt"),
+                   parameters = list(cutoffs = c(274, 289, 304, 317),
+                                     percentiles = c(5, 10, 25, 75, 90, 95),
+                                     weights = "JK with weights",
+                                     replication_scheme = 'sea-plm')
 )
 
 

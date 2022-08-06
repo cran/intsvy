@@ -6,6 +6,56 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
     }
   pv.ben.input <- function(pvnames, data, cutoff, config) {
     
+    #  JK with weight variables
+    if (config$parameters$weights == "JK with weights") {
+     if (isTRUE(atlevel)) {
+        stop("Not implemented yet")
+      }
+      
+      pvnames <- paste0("^", config$variables$pvlabelpref, "*[0-9].*", pvnames)
+      pvnames <- grep(pvnames, names(data), value = TRUE)
+      weights <- grep(paste0("^", config$variables$weightJK , ".*[0-9]+$"), 
+                      names(data), value = TRUE)
+      
+      # remove missings in pvalues and weights
+      data <- data[complete.cases(data[, c(pvnames[1], weights[1], config$variables$weight)]), ]    
+      
+
+      # data is empty
+      if (sum(is.na((data[[pvnames[1]]])))==length(data[[pvnames[1]]])) {
+        result <- data.frame(NA, "Freq"=0, "Percentage"=NA, "Std.err."= NA)  
+        names(result)[1] <- pvnames[1] 
+        return(result)
+      }
+      
+      # Replicate weighted percentages PVs (sampling error)
+      
+      tabpvr <-  lapply(1:length(pvnames), function(m) sapply(1:length(cutoff), function(z) 
+          sapply(1:length(weights), function(x)
+            100*weighted.mean(data[[pvnames[m]]]>=cutoff[z], w = data[[weights[x]]]))))
+        
+      # Total weighted %s PVs
+      tabpv <- sapply(1:length(cutoff), function(z) sapply(pvnames, function(x) 
+          100*weighted.mean(data[[x]]>=cutoff[z], w=data[[config$variables$weight]], na.rm=TRUE)))
+        
+      # Sampling error within (PV1), between PV error, and total (se)
+      tabpvw <- apply(do.call(rbind, lapply(1:length(pvnames), function(m) 
+          sapply(1:length(cutoff), function(y) 
+            sum(sapply(1:length(weights), function(x) (tabpvr[[m]][x,y]-tabpv[m,y])^2))))), 2, mean)
+        
+      tabpvb <- (1+1/length(pvnames))*apply(tabpv, 2, var)
+      tabse <- round((tabpvw+tabpvb)^(1/2), 2)
+        
+      # Total %
+      tabtot <- round(apply(tabpv, 2, mean), 2)
+        
+      # Result
+      result <- data.frame("Benchmark"=paste(rep("At or above", length(cutoff)), cutoff), 
+                             "Percentage"=tabtot, "Std. err."= tabse, check.names=F)
+      return(result)
+        
+      }
+    
     #  JK
     if (config$parameters$weights == "JK") {
       # jack knife
@@ -34,14 +84,14 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       tabpv1 <- sapply(1:length(cutoff), function(z) sapply(1:ncol(R.wt), function(x) 
         100*weighted.mean(data[[pvnames[1]]]>=cutoff[z], w = R.wt[,x])))
             
-         # Total weighted %s PV1-5 
+         # Total weighted %s PVs
       tabpv <- sapply(1:length(cutoff), function(z) sapply(pvnames, function(x) 
         100*weighted.mean(data[[x]]>=cutoff[z], w=data[[config$variables$weight]], na.rm=TRUE)))
       
       # Sampling error within (PV1), between PV error, and total (se)
       tabpvw <- sapply(1:length(cutoff), function(y) sum(sapply(1:max(data[[config$variables$jackknifeZone]]), function(x) 
         (tabpv1[x,y]-tabpv[1,y])^2)))
-      tabpvb <- (1+1/5)*apply(tabpv, 2, var)
+      tabpvb <- (1+1/length(pvnames))*apply(tabpv, 2, var)
       tabse <- round((tabpvw+tabpvb)^(1/2), 2)
       
       # Total %
@@ -64,7 +114,7 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
           sapply(1:ncol(R.wt), function(x)
           100*weighted.mean(data[[pvnames[m]]]>=cutoff[z], w = R.wt[,x]))))
 
-        # Total weighted %s PV1-5 
+        # Total weighted %s PVs
         tabpv <- sapply(1:length(cutoff), function(z) sapply(pvnames, function(x) 
           100*weighted.mean(data[[x]]>=cutoff[z], w=data[[config$variables$weight]], na.rm=TRUE)))
         
@@ -73,7 +123,7 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
           sapply(1:length(cutoff), function(y) 
           sum(sapply(1:ncol(R.wt), function(x) (tabpv1[[m]][x,y]-tabpv[m,y])^2))/2))), 2, mean)
         
-        tabpvb <- (1+1/5)*apply(tabpv, 2, var)
+        tabpvb <- (1+1/length(pvnames))*apply(tabpv, 2, var)
         tabse <- round((tabpvw+tabpvb)^(1/2), 2)
         
         # Total %
@@ -93,10 +143,13 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       # Replicate weighted %s (sampling error)
       # in PISA / PIAAC
      
-      pvnames <- paste0(pvnames, ".*PV[0-9]|PV[0-9].*", pvnames)
+      pvnames <- paste0(pvnames, ".*[0-9]|[0-9].*", pvnames)
       pvnames <- grep(pvnames, names(data), value = TRUE)
       weights <- grep(paste0("^", config$variables$weightBRR , ".*[0-9]+$"), 
                       names(data), value = TRUE)
+      
+      # remove missings in pvalues and weights
+      data <- data[complete.cases(data[, c(pvnames[1], weights[1], config$variables$weightFinal)]), ]    
       
       # data is empty
       if (sum(is.na((data[[pvnames[1]]])))==length(data[[pvnames[1]]])) {
@@ -107,14 +160,14 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
 
       if (isTRUE(atlevel)) {
         
-      # First level indicator (1/0) for 5 PVs
+      # First level indicator (1/0) for PVs
       level1 <- lapply(pvnames, function(x) ifelse(data[[x]] <= cutoff[1], 1, 0))
       
-      # Levels in between indicators (1/0) for 5 PVs
+      # Levels in between indicators (1/0) for PVs
       level.int <- lapply(pvnames, function(x) sapply(2:length(cutoff), function(z) 
         ifelse(data[[x]] > cutoff[z-1] & data[[x]] <= cutoff[z], 1, 0)))
       
-      # Last level indicator (1/0) for 5 PVs
+      # Last level indicator (1/0) for PVs
       levell <- lapply(pvnames, function(x) ifelse(data[[x]] > cutoff[length(cutoff)], 1, 0))
       
       # Recoded data for standard analysis
@@ -122,7 +175,7 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       
       # Percentages for replicates and pvs
       tabpvrp <- lapply(1:length(pvnames), function(x) 
-                    sapply(1:config$parameters$BRRreps, function(i) 
+                    sapply(1:length(weights), function(i) 
                         100*apply(level.data[[x]], 2, weighted.mean, 
                             w = data[[weights[i]]], na.rm= TRUE)))
       
@@ -135,7 +188,10 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       tabtot <- apply(tabpvt, 1, mean)
       
       # Sampling error, between PV error, and total (se)
-      varw <- apply(sapply(1:length(pvnames), function(x) 0.05*apply(sapply(1:config$parameters$BRRreps, function(i) (tabpvrp[[x]][, i] - tabpvt[ , x])^2), 1, sum)), 1, mean)
+      cc =  1/(length(weights)*(1-0.5)^2)
+      
+      varw <- apply(sapply(1:length(pvnames), 
+              function(x) cc*apply(sapply(1:length(weights), function(i) (tabpvrp[[x]][, i] - tabpvt[ , x])^2), 1, sum)), 1, mean)
       varb <- (1/(length(pvnames)-1))*apply(sapply(1:length(pvnames), function(x) (tabpvt[, x]-tabtot)^2), 1, sum)
       tabse <-(varw+(1+1/length(pvnames))*varb)^(1/2)
       
@@ -151,7 +207,7 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       
       # variation across pvs and weights
       tabpvrp <-  lapply(1:length(pvnames), function(m) sapply(1:length(cutoff), function(z) 
-        sapply(1:config$parameters$BRRreps, function(i)
+        sapply(1:length(weights), function(i)
           100*weighted.mean(data[[pvnames[m]]]>=cutoff[z], 
                             w = data[[weights[i]]], na.rm=TRUE))))      
       
@@ -167,9 +223,11 @@ intsvy.ben.pv <- function(pvnames, by, cutoff, data, atlevel = FALSE,
       
       
       # Sampling error, between PV error, and total (se)
+      cc =  1/(length(weights)*(1-0.5)^2)
+      
       varw <- apply(sapply(1:length(cutoff), 
-                      function(cut) 0.05*apply(sapply(1:length(pvnames),
-                      function(pv) sapply(1:config$parameters$BRRreps, function(w) 
+                      function(cut) cc*apply(sapply(1:length(pvnames),
+                      function(pv) sapply(1:length(weights), function(w) 
                        (tabpvrp[[pv]][w, cut] - tabpvt[pv , cut])^2)), 2, sum)), 2, mean)
       
       varb <- (1/(length(pvnames)-1))*apply(sapply(1:length(cutoff), 
