@@ -1,8 +1,8 @@
-1d81d2679f3e2e8f82a3792669f53883 *DESCRIPTION
+2ebf718774f593b36b2d6aef955db923 *DESCRIPTION
 3f89d2c087a9bcf5dd94419a31ed7727 *NAMESPACE
 e1d0ba86b4cfc2e35a40973dab2c9fc7 *R/adj.input.R
 86deb97a547cafec6f99ceade6d38398 *R/adj.measlev.R
-549f8f72f5a133f27b73109671a17cfa *R/intsvy.ben.pv.R
+cbec16b39bceacc8c3546798244a1463 *R/intsvy.ben.pv.R
 222d3d2e992b912e3b1cfaa9d5dff5b3 *R/intsvy.config.R
 cf68096a04dc2e359470fc5e51302850 *R/intsvy.log.R
 fa9dd8c53def03455928e0a530d09a21 *R/intsvy.log.pv.R
@@ -53,7 +53,7 @@ c83b88b62a3175cb1e3e5bc2095dd69d *R/pisa.var.label.R
 1738f328836517c608d103a45c050280 *R/plot.intsvy.reg.R
 80b9c0b26c498c195df20a8741fa6063 *R/plot.intsvy.table.R
 f67d9aa21f5296f8d54df1945f9fe151 *R/surv_conf.R
-db288a9e5a6988cad95cffcccfa50ce6 *R/sysdata.rda
+c8cc914d239e146adec4e1f30d9317e4 *R/sysdata.rda
 6776f32cca2d5a5f731805ba5cbefa80 *R/timss.ben.pv.R
 e552ac6593a3042b1c36c7469017639f *R/timss.log.R
 1a7b116b9715057d1bd6154c62b69395 *R/timss.log.pv.R
@@ -75,7 +75,7 @@ c1016bd426ff3ac80ad848f5653bc614 *README.md
 89b81c45e5621da4e95ddfa4954783d3 *man/adj.input.Rd
 f5f42fd6fa35b9ee3080007be3d4e576 *man/adj.measlev.Rd
 09041d3322168fdbb08831c1926d2d04 *man/confs.Rd
-c944e85d0143604b897c0bb6d7b83daa *man/intsvy-package.Rd
+63e3f8fab3e4c938099225930315489b *man/intsvy-package.Rd
 4608137c90ba77161bcf734b451d50d2 *man/intsvy.ben.pv.Rd
 7cc7d05f76b1401f43b9e1435c673a0d *man/intsvy.config.Rd
 5d394532cc68717e46a74045f0603e21 *man/intsvy.log.Rd
