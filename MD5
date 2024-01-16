@@ -1,4 +1,4 @@
-baaf61c35173f98cc17a740cd4da43b0 *DESCRIPTION
+aab09174cff349b1b2eec144728d2c00 *DESCRIPTION
 3f89d2c087a9bcf5dd94419a31ed7727 *NAMESPACE
 e1d0ba86b4cfc2e35a40973dab2c9fc7 *R/adj.input.R
 86deb97a547cafec6f99ceade6d38398 *R/adj.measlev.R
@@ -7,7 +7,7 @@ e1d0ba86b4cfc2e35a40973dab2c9fc7 *R/adj.input.R
 cf68096a04dc2e359470fc5e51302850 *R/intsvy.log.R
 83c523899be58db853907d1ab9568394 *R/intsvy.log.pv.R
 e019ef53810fae840a2d3e71a63028fd *R/intsvy.mean.R
-b11cca27f5285b1edddaba75143a1bec *R/intsvy.mean.pv.R
+dc1fc699e75850054fb3b42c2ab8af08 *R/intsvy.mean.pv.R
 082b132ea326c5ca3039db645ef7f3bf *R/intsvy.per.pv.R
 4cb7aad4489c40b042358ca80af2e4cf *R/intsvy.reg.R
 20ff5115e7d77375b466037e3a2ecbae *R/intsvy.reg.pv.R
@@ -46,9 +46,9 @@ ea287bbf1bad5f368876fc50bd56ea52 *R/pisa.per.pv.R
 0b14910c880503aae57e52066ae6bbe3 *R/pisa.reg.R
 4e19d9e128a899c85600abdab681ae56 *R/pisa.reg.pv.R
 989135ee0d25f1249f6df0f461e30ff5 *R/pisa.rho.R
-6250e37a562dba718500f3a68f75a211 *R/pisa.select.merge.R
+318fbd0962ecd022a971a826ce62a66e *R/pisa.select.merge.R
 68e74150d05a0c4bb28e3b6c487d1ca3 *R/pisa.table.R
-c83b88b62a3175cb1e3e5bc2095dd69d *R/pisa.var.label.R
+0f0ec3012631af0f1833852ddf7834a1 *R/pisa.var.label.R
 2a38d9ab24e70c5b1df1092a986abd25 *R/plot.intsvy.mean.R
 1738f328836517c608d103a45c050280 *R/plot.intsvy.reg.R
 80b9c0b26c498c195df20a8741fa6063 *R/plot.intsvy.table.R
@@ -75,7 +75,7 @@ c1016bd426ff3ac80ad848f5653bc614 *README.md
 89b81c45e5621da4e95ddfa4954783d3 *man/adj.input.Rd
 f5f42fd6fa35b9ee3080007be3d4e576 *man/adj.measlev.Rd
 09041d3322168fdbb08831c1926d2d04 *man/confs.Rd
-ffd848622711b14284c0c20fd40f35e3 *man/intsvy-package.Rd
+dadf277249dbfd5a7230fdb720cafb2e *man/intsvy-package.Rd
 28bb3605a9d854a4f71115d46f0ed773 *man/intsvy.ben.pv.Rd
 7cc7d05f76b1401f43b9e1435c673a0d *man/intsvy.config.Rd
 5d394532cc68717e46a74045f0603e21 *man/intsvy.log.Rd
